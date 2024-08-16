@@ -1,0 +1,261 @@
+const kp: int = 1
+const ki: int = 100
+const kd: int = 10000
+const s: int = 3800
+const ns: int = 300
+
+
+node pid(sen0, sen1, sen2, sen3, sen4: int) returns (v_l, v_r:int)
+var error,i,p,d,temp,pid:int;
+let
+	
+	error = sen1 - sen3;
+	p = error;
+	i = 0 -> (pre(i) + error);
+	d = error - (0 -> pre(error));
+	temp = (p/kp) + (i/ki) + (d/kd);
+	pid = if (temp < 0) then -10 else 10;
+ 
+ 	v_l = if(pid = 0) then 50 else (30 - pid);
+ 	v_r = if(pid = 0) then 50 else (30 + pid);
+        
+tel
+node main(sen0, sen1, sen2, sen3, sen4, ir_left, ir_right, j_input:int; sec:bool) returns (v_l, v_r,dir, inputgiven:int)
+var sen:int^5; last inputvalue:int = 0;
+let
+	inputgiven=inputvalue;
+	automaton
+		state Inputval
+        		do sen=[1023-sen0, 1023-sen1, 1023-sen2, 1023-sen3, 1023-sen4];
+			v_l=0; v_r=0; dir=0;
+			inputvalue=if not (j_input=0) then j_input else (last inputvalue);
+		unless (j_input=6) then White
+			
+		state White
+			do sen=[1023-sen0, 1023-sen1, 1023-sen2, 1023-sen3, 1023-sen4];
+        		automaton
+        			
+				
+        			state Idle
+        				do 
+        				dir = 1;
+        				v_l=50; v_r=50;
+        			unless ( sen[1]<500 or sen[3]<500 ) then Pid
+        				| (sen[0] < 500 ) then Turnleft
+        				| (sen[4] < 500) then Turnright
+        	
+        			state Pid
+        				do
+        				dir = 2;
+        				(v_l,v_r) = pid(sen[0], sen[1], sen[2], sen[3], sen[4]);
+        			unless (sen[0]<500) then Turnleft
+        				| (sen[4]<500) then Turnright
+        		
+        			state Turnleft	
+        				do
+        				dir = 3;
+        				v_l=100; v_r=100;
+        			unless (sen[1]<600 or sen[3]<600 or sen[2]<600) then Pid
+        				| sen[4]<500 then Turnright
+        		
+        			state Turnright
+        				do
+        				dir = 4;
+        				v_l=100; v_r=100;
+        			unless (sen[1]<600 or sen[3]<600 or sen[2]<600) then Pid
+        				| sen[0]<500 then Turnleft
+        		
+        			state Stop 
+        				do
+        				dir = 0;
+        				v_l = 0; v_r = 0;
+        			unless ( sen[1]<500 or sen[3]<500 ) then Pid
+        				| (sen[0] < 500 ) then Turnleft
+        				| (sen[4] < 500) then Turnright	
+        		end
+		unless (j_input=1) then Joystick
+			|(j_input=7) then Inputval
+			|((sen0>600 and sen4>600) and (sen2<600))then Black
+		
+		state Black
+			var last count:int = 0; last bound_left:int=0; last bound_right:int=0;
+			do sen=[sen0, sen1, sen2, sen3, sen4];
+        		automaton
+       
+     				state Idle
+        				do 
+        				dir = 1;
+        				v_l=50; v_r=50;
+        			unless (sen[1]<600 and sen[2]<600 and sen[3]<600 and sen[4]<600) then Box
+        				|( sen[1]<500 or sen[3]<500 ) then Pid
+        				| (sen[0] < 500 ) then Turnleft
+        				| (sen[4] < 500) then Turnright
+        				
+        	
+        			state Pid
+        				do
+        				dir = 2;
+        				(v_l,v_r) = pid(sen[0], sen[1], sen[2], sen[3], sen[4]);
+        			unless (sen[1]<600 and sen[2]<600 and sen[3]<600 and sen[4]<600) then Box
+        				| (sen[0]<500) then Turnleft
+        				| (sen[4]<500) then Turnright
+        		
+        			state Turnleft	
+        				do
+        				dir = 3;
+        				v_l=90; v_r=90;
+        			unless (sen[1]<500 or sen[3]<500) then Pid
+        				| sen[4]<500 then Turnright
+        		
+        			state Turnright
+        				do
+        				dir = 4;
+        				v_l=90; v_r=90;
+        			unless (sen[1]<500 or sen[3]<500) then Pid
+        				| sen[0]<500 then Turnleft
+        		
+        			state Stop
+        			var time:int;
+        				do
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        				dir = 0;
+        				v_l = 0; v_r = 0;
+        			until (time=0) then Parkingstart
+
+        			state Box
+        				do
+        				dir = 1;
+        				v_l=100; v_r=100; count= (last count) +1;
+        				until ((count=2 and inputvalue=2) or (count=1 and inputvalue=4) or (count=2 and inputvalue=4) or (count=3 and inputvalue=3) or (count=1 and inputvalue=5) or (count=3 and inputvalue=5)) then Boxturnright
+        					| (count=4 and (inputvalue=2 or inputvalue=4)) then Parkingleft
+        					| (count=4 and (inputvalue=3 or inputvalue=5)) then Parkingright
+        					| true then Boxturnleft
+        			state Boxturnleft
+        				do
+        				dir = 3;
+        				v_l=90; v_r=90;
+        			until not (sen[1]<600 and sen[2]<600 and sen[3]<600 and (sen[0]<600 or sen[4]<600)) then Boxpid
+        			state Boxturnright
+        				do
+        				dir = 4;
+        				v_l=90; v_r=90;
+        			until not (sen[1]<600 and sen[2]<600 and sen[3]<600 and (sen[0]<600 or sen[4]<600)) then Boxpid
+        			state Boxpid
+        				do
+        				dir = 2;
+        				(v_l,v_r) = pid(sen[0], sen[1], sen[2], sen[3], sen[4]);
+        			unless (sen[0]>600 and sen[4]>600 and sen[2]<600) then Pid
+        			state Parkingleft
+        				do
+        				dir = 3;
+        				v_l=100; v_r=100;
+        			unless not (sen[1]<600 and sen[2]<600 and sen[3]<600 and (sen[0]<600 or sen[4]<600)) then Parkingpid
+        			state Parkingright
+        				do
+        				dir = 4;
+        				v_l=100; v_r=100;
+        			unless not (sen[1]<600 and sen[2]<600 and sen[3]<600 and (sen[0]<600 or sen[4]<600)) then Parkingpid
+        			state Parkingpid
+        				do
+        				dir = 2;
+        				(v_l,v_r) = pid(sen[0], sen[1], sen[2], sen[3], sen[4]);
+        			unless (sen[1]<600 and sen[2]<600 and sen[3]<600) then Stop
+        			state Parkingstart
+        			var time:int;
+        				do
+        				dir = 2;
+        				bound_left = (last bound_left)+ (if(ir_left=0) then 1 else 0);
+        				bound_right = (last bound_right)+ (if(ir_right=0) then 1 else 0);
+        				time= 7->if(sec) then pre(time)-1 else pre(time);                    
+        				(v_l,v_r) = pid(sen[0], sen[1], sen[2], sen[3], sen[4]);
+        			until (time=0) then Parkingcheck
+        			state Parkingcheck
+        				do
+        				v_l=0; v_r=0; dir=0;
+        			until (bound_left=0) then Parkleft
+        				|(bound_right=0) then Parkright
+        				| true then Parkingrestart
+        			state Parkleft
+        			var time:int;
+        				do
+        				v_l=0; v_r=0; dir=0;
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        			until (time=0) then Backleft
+        			
+        			state Parkright
+        				var time:int;
+        				do
+        				v_l=0; v_r=0; dir=0;
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        			until (time=0) then Backright
+        				
+        			state Parkingrestart
+        			var time:int;
+        				do
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        				bound_left=0; bound_right=0;
+        				v_l=0; v_r=0; dir=0;
+        			until true then Parkingstart
+        			
+        			state Backright
+        			var time:int;
+        				do
+        				v_l=40; v_r=63; dir=5;
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        			until (time=0) then Parked
+        			
+        			state Backleft
+        			var time:int;
+        				do
+        				v_l=63; v_r=40; dir=6;
+        				time= 2->if(sec) then pre(time)-1 else pre(time);
+        			until (time=0) then Parked
+        			
+        			state Parked
+        				do
+        				v_l=0; v_r=0; dir=0;
+        		end
+        	unless (j_input=1) then Joystick
+        	
+        	state Joystick
+        	do sen=[sen0, sen1, sen2, sen3, sen4];
+        		automaton
+        			state Idle
+        				do
+        				v_l=0; v_r=0; dir=0;
+        			unless (j_input=2) then Forward
+        				|(j_input=3) then Backward
+        				|(j_input=4) then Left
+        				|(j_input=5) then Right
+        			state Left
+        				do
+        				v_l=30; v_r=30; dir=3;
+        			unless (j_input=2) then Forward
+        				|(j_input=3) then Backward
+        				|(j_input=0) then Idle
+        				|(j_input=5) then Right
+        			state Right
+        				do
+        				v_l=30; v_r=30; dir=4;
+        			unless (j_input=2) then Forward
+        				|(j_input=3) then Backward
+        				|(j_input=0) then Idle
+        				|(j_input=4) then Left
+        			state Forward
+        				do
+        				v_l=30; v_r=30; dir=1;
+        			unless (j_input=4) then Left
+        				|(j_input=3) then Backward
+        				|(j_input=0) then Idle
+        				|(j_input=5) then Right
+        			state Backward
+        				do
+        				v_l=30; v_r=30; dir=4;
+        			unless (j_input=2) then Forward
+        				|(j_input=4) then Left
+        				|(j_input=0) then Idle
+        				|(j_input=5) then Right
+        		end
+        	unless (j_input=6) continue White
+        end
+tel

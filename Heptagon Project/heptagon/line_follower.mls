@@ -1,0 +1,1415 @@
+type st_3 = St_3_White|St_3_Joystick|St_3_Inputval|St_3_Black
+type st_2 = St_2_Right|St_2_Left|St_2_Idle|St_2_Forward|St_2_Backward
+type st_1 = St_1_Turnright|St_1_Turnleft|St_1_Stop|St_1_Pid|St_1_Parkright|
+  St_1_Parkleft|St_1_Parkingstart|St_1_Parkingright|St_1_Parkingrestart|
+  St_1_Parkingpid|St_1_Parkingleft|St_1_Parkingcheck|St_1_Parked|St_1_Idle|
+  St_1_Boxturnright|St_1_Boxturnleft|St_1_Boxpid|St_1_Box|St_1_Backright|
+  St_1_Backleft
+type st = St_Turnright|St_Turnleft|St_Stop|St_Pid|St_Idle
+const kp = 1
+const ki = 100
+const kd = 10000
+const s = 3800
+const ns = 300
+node pid(sen0 : int; sen1 : int; sen2 : int; sen3 : int; sen4 : int)
+returns (v_l : int; v_r : int)
+var pid : int; temp : int; d : int; p : int; i : int; error : int; v : bool;
+    v_1 : int; v_2 : int; v_3 : bool; v_4 : int; v_5 : int; v_6 : int;
+    v_7 : int; v_8 : int; v_9 : int; v_10 : bool; v_11 : bool; v_12 : int;
+    v_13 : bool; v_14 : int;
+let
+  v_r = if v_13 then 50 else v_14;
+  v_14 = (30 + pid);
+  v_13 = (pid = 0);
+  v_l = if v_11 then 50 else v_12;
+  v_12 = (30 - pid);
+  v_11 = (pid = 0);
+  pid = if v_10 then ~-(10) else 10;
+  v_10 = (temp < 0);
+  temp = (v_8 + v_9);
+  v_9 = (d / kd);
+  v_8 = (v_6 + v_7);
+  v_7 = (i / ki);
+  v_6 = (p / kp);
+  d = (error - v_5);
+  v_5 = if v_3 then 0 else v_4;
+  v_4 = pre error;
+  v_3 = true fby false;
+  i = if v then 0 else v_2;
+  v_2 = (v_1 + error);
+  v_1 = pre i;
+  v = true fby false;
+  p = error;
+  error = (sen1 - sen3)
+tel
+
+node main(sen0 : int; sen1 : int; sen2 : int; sen3 : int; sen4 : int;
+           ir_left : int; ir_right : int; j_input : int; sec : bool)
+returns (v_l : int; v_r : int; dir : int; inputgiven : int)
+var inputvalue : int; sen : int^5; inputvalue_1 : int; pnr_3 : bool;
+    nr_3 : bool; r_3 : bool; ns_3 : st_3; s_3 : st_3; ck_1 : st_3;
+    v_l_St_3_Inputval : int; v_r_St_3_Inputval : int;
+    dir_St_3_Inputval : int; sen_St_3_Inputval : int^5;
+    inputvalue_St_3_Inputval : int; ns_3_St_3_Inputval : st_3;
+    nr_3_St_3_Inputval : bool; v_l_St_3_White : int; v_r_St_3_White : int;
+    dir_St_3_White : int; sen_St_3_White : int^5;
+    inputvalue_St_3_White : int; ns_3_St_3_White : st_3;
+    nr_3_St_3_White : bool; v_l_St_3_Black : int; v_r_St_3_Black : int;
+    dir_St_3_Black : int; sen_St_3_Black : int^5;
+    inputvalue_St_3_Black : int; ns_3_St_3_Black : st_3;
+    nr_3_St_3_Black : bool; v_l_St_3_Joystick : int; v_r_St_3_Joystick : int;
+    dir_St_3_Joystick : int; sen_St_3_Joystick : int^5;
+    inputvalue_St_3_Joystick : int; ns_3_St_3_Joystick : st_3;
+    nr_3_St_3_Joystick : bool; v_416 : int; v_417 : int; v_418 : int;
+    v_419 : int; v_420 : int; v_421 : bool; v_422 : bool; pnr : bool;
+    nr : bool; r : bool; ns : st; s : st; v_348 : int; v_349 : int;
+    v_350 : int; v_351 : int; v_352 : int; v_415 : bool; ck_3 : st;
+    v_l_St_3_White_St_Idle : int; v_r_St_3_White_St_Idle : int;
+    dir_St_3_White_St_Idle : int; ns_St_Idle : st; nr_St_Idle : bool;
+    v_l_St_3_White_St_Pid : int; v_r_St_3_White_St_Pid : int;
+    dir_St_3_White_St_Pid : int; ns_St_Pid : st; nr_St_Pid : bool;
+    v_l_St_3_White_St_Turnleft : int; v_r_St_3_White_St_Turnleft : int;
+    dir_St_3_White_St_Turnleft : int; ns_St_Turnleft : st;
+    nr_St_Turnleft : bool; v_l_St_3_White_St_Turnright : int;
+    v_r_St_3_White_St_Turnright : int; dir_St_3_White_St_Turnright : int;
+    ns_St_Turnright : st; nr_St_Turnright : bool;
+    v_l_St_3_White_St_Stop : int; v_r_St_3_White_St_Stop : int;
+    dir_St_3_White_St_Stop : int; ns_St_Stop : st; nr_St_Stop : bool;
+    r_8 : bool; v_410 : int; v_411 : int; v_412 : int; v_413 : int;
+    v_414 : int; ck_2 : st; s_St_Idle : st; r_St_Idle : bool; s_St_Pid : st;
+    r_St_Pid : bool; s_St_Turnleft : st; r_St_Turnleft : bool;
+    s_St_Turnright : st; r_St_Turnright : bool; s_St_Stop : st;
+    r_St_Stop : bool; v_409 : st; v_396 : int; v_397 : bool; v_398 : int;
+    v_399 : bool; v_400 : bool; v_401 : int; v_402 : bool; v_403 : int;
+    v_404 : bool; v_405 : st; v_406 : bool; v_407 : st; v_408 : bool;
+    v_390 : int; v_391 : bool; v_392 : int; v_393 : bool; v_394 : st;
+    v_395 : bool; v_378 : int; v_379 : bool; v_380 : int; v_381 : bool;
+    v_382 : bool; v_383 : int; v_384 : bool; v_385 : bool; v_386 : int;
+    v_387 : bool; v_388 : st; v_389 : bool; v_366 : int; v_367 : bool;
+    v_368 : int; v_369 : bool; v_370 : bool; v_371 : int; v_372 : bool;
+    v_373 : bool; v_374 : int; v_375 : bool; v_376 : st; v_377 : bool;
+    v_353 : int; v_354 : bool; v_355 : int; v_356 : bool; v_357 : bool;
+    v_358 : int; v_359 : bool; v_360 : int; v_361 : bool; v_362 : st;
+    v_363 : bool; v_364 : st; v_365 : bool; bound_right : int;
+    bound_left : int; count : int; count_1 : int; bound_left_1 : int;
+    bound_right_1 : int; pnr_1 : bool; nr_1 : bool; r_1 : bool; ns_1 : st_1;
+    s_1 : st_1; v_344 : bool; v_345 : int; v_346 : int; v_347 : int;
+    ck_5 : st_1; v_l_St_3_Black_St_1_Idle : int;
+    v_r_St_3_Black_St_1_Idle : int; dir_St_3_Black_St_1_Idle : int;
+    count_St_1_Idle : int; bound_left_St_1_Idle : int;
+    bound_right_St_1_Idle : int; ns_1_St_1_Idle : st_1;
+    nr_1_St_1_Idle : bool; v_l_St_3_Black_St_1_Pid : int;
+    v_r_St_3_Black_St_1_Pid : int; dir_St_3_Black_St_1_Pid : int;
+    count_St_1_Pid : int; bound_left_St_1_Pid : int;
+    bound_right_St_1_Pid : int; ns_1_St_1_Pid : st_1; nr_1_St_1_Pid : bool;
+    v_l_St_3_Black_St_1_Turnleft : int; v_r_St_3_Black_St_1_Turnleft : int;
+    dir_St_3_Black_St_1_Turnleft : int; count_St_1_Turnleft : int;
+    bound_left_St_1_Turnleft : int; bound_right_St_1_Turnleft : int;
+    ns_1_St_1_Turnleft : st_1; nr_1_St_1_Turnleft : bool;
+    v_l_St_3_Black_St_1_Turnright : int; v_r_St_3_Black_St_1_Turnright : int;
+    dir_St_3_Black_St_1_Turnright : int; count_St_1_Turnright : int;
+    bound_left_St_1_Turnright : int; bound_right_St_1_Turnright : int;
+    ns_1_St_1_Turnright : st_1; nr_1_St_1_Turnright : bool;
+    v_l_St_3_Black_St_1_Stop : int; v_r_St_3_Black_St_1_Stop : int;
+    dir_St_3_Black_St_1_Stop : int; count_St_1_Stop : int;
+    bound_left_St_1_Stop : int; bound_right_St_1_Stop : int;
+    ns_1_St_1_Stop : st_1; nr_1_St_1_Stop : bool;
+    v_l_St_3_Black_St_1_Box : int; v_r_St_3_Black_St_1_Box : int;
+    dir_St_3_Black_St_1_Box : int; count_St_1_Box : int;
+    bound_left_St_1_Box : int; bound_right_St_1_Box : int;
+    ns_1_St_1_Box : st_1; nr_1_St_1_Box : bool;
+    v_l_St_3_Black_St_1_Boxturnleft : int;
+    v_r_St_3_Black_St_1_Boxturnleft : int;
+    dir_St_3_Black_St_1_Boxturnleft : int; count_St_1_Boxturnleft : int;
+    bound_left_St_1_Boxturnleft : int; bound_right_St_1_Boxturnleft : int;
+    ns_1_St_1_Boxturnleft : st_1; nr_1_St_1_Boxturnleft : bool;
+    v_l_St_3_Black_St_1_Boxturnright : int;
+    v_r_St_3_Black_St_1_Boxturnright : int;
+    dir_St_3_Black_St_1_Boxturnright : int; count_St_1_Boxturnright : int;
+    bound_left_St_1_Boxturnright : int; bound_right_St_1_Boxturnright : int;
+    ns_1_St_1_Boxturnright : st_1; nr_1_St_1_Boxturnright : bool;
+    v_l_St_3_Black_St_1_Boxpid : int; v_r_St_3_Black_St_1_Boxpid : int;
+    dir_St_3_Black_St_1_Boxpid : int; count_St_1_Boxpid : int;
+    bound_left_St_1_Boxpid : int; bound_right_St_1_Boxpid : int;
+    ns_1_St_1_Boxpid : st_1; nr_1_St_1_Boxpid : bool;
+    v_l_St_3_Black_St_1_Parkingleft : int;
+    v_r_St_3_Black_St_1_Parkingleft : int;
+    dir_St_3_Black_St_1_Parkingleft : int; count_St_1_Parkingleft : int;
+    bound_left_St_1_Parkingleft : int; bound_right_St_1_Parkingleft : int;
+    ns_1_St_1_Parkingleft : st_1; nr_1_St_1_Parkingleft : bool;
+    v_l_St_3_Black_St_1_Parkingright : int;
+    v_r_St_3_Black_St_1_Parkingright : int;
+    dir_St_3_Black_St_1_Parkingright : int; count_St_1_Parkingright : int;
+    bound_left_St_1_Parkingright : int; bound_right_St_1_Parkingright : int;
+    ns_1_St_1_Parkingright : st_1; nr_1_St_1_Parkingright : bool;
+    v_l_St_3_Black_St_1_Parkingpid : int;
+    v_r_St_3_Black_St_1_Parkingpid : int;
+    dir_St_3_Black_St_1_Parkingpid : int; count_St_1_Parkingpid : int;
+    bound_left_St_1_Parkingpid : int; bound_right_St_1_Parkingpid : int;
+    ns_1_St_1_Parkingpid : st_1; nr_1_St_1_Parkingpid : bool;
+    v_l_St_3_Black_St_1_Parkingstart : int;
+    v_r_St_3_Black_St_1_Parkingstart : int;
+    dir_St_3_Black_St_1_Parkingstart : int; count_St_1_Parkingstart : int;
+    bound_left_St_1_Parkingstart : int; bound_right_St_1_Parkingstart : int;
+    ns_1_St_1_Parkingstart : st_1; nr_1_St_1_Parkingstart : bool;
+    v_l_St_3_Black_St_1_Parkingcheck : int;
+    v_r_St_3_Black_St_1_Parkingcheck : int;
+    dir_St_3_Black_St_1_Parkingcheck : int; count_St_1_Parkingcheck : int;
+    bound_left_St_1_Parkingcheck : int; bound_right_St_1_Parkingcheck : int;
+    ns_1_St_1_Parkingcheck : st_1; nr_1_St_1_Parkingcheck : bool;
+    v_l_St_3_Black_St_1_Parkleft : int; v_r_St_3_Black_St_1_Parkleft : int;
+    dir_St_3_Black_St_1_Parkleft : int; count_St_1_Parkleft : int;
+    bound_left_St_1_Parkleft : int; bound_right_St_1_Parkleft : int;
+    ns_1_St_1_Parkleft : st_1; nr_1_St_1_Parkleft : bool;
+    v_l_St_3_Black_St_1_Parkright : int; v_r_St_3_Black_St_1_Parkright : int;
+    dir_St_3_Black_St_1_Parkright : int; count_St_1_Parkright : int;
+    bound_left_St_1_Parkright : int; bound_right_St_1_Parkright : int;
+    ns_1_St_1_Parkright : st_1; nr_1_St_1_Parkright : bool;
+    v_l_St_3_Black_St_1_Parkingrestart : int;
+    v_r_St_3_Black_St_1_Parkingrestart : int;
+    dir_St_3_Black_St_1_Parkingrestart : int;
+    count_St_1_Parkingrestart : int; bound_left_St_1_Parkingrestart : int;
+    bound_right_St_1_Parkingrestart : int; ns_1_St_1_Parkingrestart : st_1;
+    nr_1_St_1_Parkingrestart : bool; v_l_St_3_Black_St_1_Backright : int;
+    v_r_St_3_Black_St_1_Backright : int; dir_St_3_Black_St_1_Backright : int;
+    count_St_1_Backright : int; bound_left_St_1_Backright : int;
+    bound_right_St_1_Backright : int; ns_1_St_1_Backright : st_1;
+    nr_1_St_1_Backright : bool; v_l_St_3_Black_St_1_Backleft : int;
+    v_r_St_3_Black_St_1_Backleft : int; dir_St_3_Black_St_1_Backleft : int;
+    count_St_1_Backleft : int; bound_left_St_1_Backleft : int;
+    bound_right_St_1_Backleft : int; ns_1_St_1_Backleft : st_1;
+    nr_1_St_1_Backleft : bool; v_l_St_3_Black_St_1_Parked : int;
+    v_r_St_3_Black_St_1_Parked : int; dir_St_3_Black_St_1_Parked : int;
+    count_St_1_Parked : int; bound_left_St_1_Parked : int;
+    bound_right_St_1_Parked : int; ns_1_St_1_Parked : st_1;
+    nr_1_St_1_Parked : bool; r_7 : bool; v_339 : int; v_340 : int;
+    v_341 : int; v_342 : int; v_343 : int; time : int; v_331 : bool;
+    v_332 : bool; v_333 : bool; v_334 : bool; v_335 : int; v_336 : int;
+    v_337 : int; v_338 : int; v_292 : bool; v_293 : bool; v_294 : bool;
+    v_295 : bool; v_296 : bool; v_297 : bool; v_298 : bool; v_299 : bool;
+    v_300 : bool; v_301 : bool; v_302 : bool; v_303 : bool; v_304 : bool;
+    v_305 : bool; v_306 : bool; v_307 : bool; v_308 : bool; v_309 : bool;
+    v_310 : bool; v_311 : bool; v_312 : bool; v_313 : bool; v_314 : bool;
+    v_315 : bool; v_316 : bool; v_317 : bool; v_318 : bool; v_319 : bool;
+    v_320 : bool; v_321 : bool; v_322 : bool; v_323 : bool; v_324 : bool;
+    v_325 : st_1; v_326 : bool; v_327 : st_1; v_328 : bool; v_329 : st_1;
+    v_330 : bool; v_277 : int; v_278 : bool; v_279 : int; v_280 : bool;
+    v_281 : bool; v_282 : int; v_283 : bool; v_284 : bool; v_285 : int;
+    v_286 : bool; v_287 : int; v_288 : bool; v_289 : bool; v_290 : bool;
+    v_291 : bool; v_262 : int; v_263 : bool; v_264 : int; v_265 : bool;
+    v_266 : bool; v_267 : int; v_268 : bool; v_269 : bool; v_270 : int;
+    v_271 : bool; v_272 : int; v_273 : bool; v_274 : bool; v_275 : bool;
+    v_276 : bool; r_6 : bool; v_257 : int; v_258 : int; v_259 : int;
+    v_260 : int; v_261 : int; r_5 : bool; v_252 : int; v_253 : int;
+    v_254 : int; v_255 : int; v_256 : int; time_1 : int; r_4 : bool;
+    v_235 : bool; v_236 : bool; v_237 : int; v_238 : bool; v_239 : int;
+    v_240 : bool; v_241 : bool; v_242 : bool; v_243 : int; v_244 : int;
+    v_245 : int; v_246 : int; v_247 : int; v_248 : int; v_249 : int;
+    v_250 : int; v_251 : int; v_229 : bool; v_230 : bool; v_231 : st_1;
+    v_232 : bool; v_233 : st_1; v_234 : bool; time_2 : int; v_221 : bool;
+    v_222 : bool; v_223 : bool; v_224 : bool; v_225 : int; v_226 : int;
+    v_227 : int; v_228 : int; time_3 : int; v_213 : bool; v_214 : bool;
+    v_215 : bool; v_216 : bool; v_217 : int; v_218 : int; v_219 : int;
+    v_220 : int; time_4 : int; v_206 : bool; v_207 : bool; v_208 : bool;
+    v_209 : int; v_210 : int; v_211 : int; v_212 : int; time_5 : int;
+    v_198 : bool; v_199 : bool; v_200 : bool; v_201 : bool; v_202 : int;
+    v_203 : int; v_204 : int; v_205 : int; time_6 : int; v_190 : bool;
+    v_191 : bool; v_192 : bool; v_193 : bool; v_194 : int; v_195 : int;
+    v_196 : int; v_197 : int; ck_4 : st_1; s_1_St_1_Idle : st_1;
+    r_1_St_1_Idle : bool; s_1_St_1_Pid : st_1; r_1_St_1_Pid : bool;
+    s_1_St_1_Turnleft : st_1; r_1_St_1_Turnleft : bool;
+    s_1_St_1_Turnright : st_1; r_1_St_1_Turnright : bool;
+    s_1_St_1_Stop : st_1; r_1_St_1_Stop : bool; s_1_St_1_Box : st_1;
+    r_1_St_1_Box : bool; s_1_St_1_Boxturnleft : st_1;
+    r_1_St_1_Boxturnleft : bool; s_1_St_1_Boxturnright : st_1;
+    r_1_St_1_Boxturnright : bool; s_1_St_1_Boxpid : st_1;
+    r_1_St_1_Boxpid : bool; s_1_St_1_Parkingleft : st_1;
+    r_1_St_1_Parkingleft : bool; s_1_St_1_Parkingright : st_1;
+    r_1_St_1_Parkingright : bool; s_1_St_1_Parkingpid : st_1;
+    r_1_St_1_Parkingpid : bool; s_1_St_1_Parkingstart : st_1;
+    r_1_St_1_Parkingstart : bool; s_1_St_1_Parkingcheck : st_1;
+    r_1_St_1_Parkingcheck : bool; s_1_St_1_Parkleft : st_1;
+    r_1_St_1_Parkleft : bool; s_1_St_1_Parkright : st_1;
+    r_1_St_1_Parkright : bool; s_1_St_1_Parkingrestart : st_1;
+    r_1_St_1_Parkingrestart : bool; s_1_St_1_Backright : st_1;
+    r_1_St_1_Backright : bool; s_1_St_1_Backleft : st_1;
+    r_1_St_1_Backleft : bool; s_1_St_1_Parked : st_1; r_1_St_1_Parked : bool;
+    v_189 : st_1; v_163 : int; v_164 : bool; v_165 : int; v_166 : bool;
+    v_167 : bool; v_168 : int; v_169 : bool; v_170 : bool; v_171 : int;
+    v_172 : bool; v_173 : bool; v_174 : int; v_175 : bool; v_176 : int;
+    v_177 : bool; v_178 : bool; v_179 : int; v_180 : bool; v_181 : int;
+    v_182 : bool; v_183 : st_1; v_184 : bool; v_185 : st_1; v_186 : bool;
+    v_187 : st_1; v_188 : bool; v_144 : int; v_145 : bool; v_146 : int;
+    v_147 : bool; v_148 : bool; v_149 : int; v_150 : bool; v_151 : bool;
+    v_152 : int; v_153 : bool; v_154 : bool; v_155 : int; v_156 : bool;
+    v_157 : int; v_158 : bool; v_159 : st_1; v_160 : bool; v_161 : st_1;
+    v_162 : bool; v_135 : int; v_136 : bool; v_137 : int; v_138 : bool;
+    v_139 : bool; v_140 : int; v_141 : bool; v_142 : st_1; v_143 : bool;
+    v_126 : int; v_127 : bool; v_128 : int; v_129 : bool; v_130 : bool;
+    v_131 : int; v_132 : bool; v_133 : st_1; v_134 : bool; v_118 : int;
+    v_119 : bool; v_120 : int; v_121 : bool; v_122 : bool; v_123 : int;
+    v_124 : bool; v_125 : bool; v_103 : int; v_104 : bool; v_105 : int;
+    v_106 : bool; v_107 : bool; v_108 : int; v_109 : bool; v_110 : bool;
+    v_111 : int; v_112 : bool; v_113 : int; v_114 : bool; v_115 : bool;
+    v_116 : bool; v_117 : bool; v_88 : int; v_89 : bool; v_90 : int;
+    v_91 : bool; v_92 : bool; v_93 : int; v_94 : bool; v_95 : bool;
+    v_96 : int; v_97 : bool; v_98 : int; v_99 : bool; v_100 : bool;
+    v_101 : bool; v_102 : bool; v_80 : int; v_81 : bool; v_82 : int;
+    v_83 : bool; v_84 : bool; v_85 : int; v_86 : bool; v_87 : bool;
+    pnr_2 : bool; nr_2 : bool; r_2 : bool; ns_2 : st_2; s_2 : st_2;
+    v_79 : bool; ck_7 : st_2; v_l_St_3_Joystick_St_2_Idle : int;
+    v_r_St_3_Joystick_St_2_Idle : int; dir_St_3_Joystick_St_2_Idle : int;
+    ns_2_St_2_Idle : st_2; nr_2_St_2_Idle : bool;
+    v_l_St_3_Joystick_St_2_Left : int; v_r_St_3_Joystick_St_2_Left : int;
+    dir_St_3_Joystick_St_2_Left : int; ns_2_St_2_Left : st_2;
+    nr_2_St_2_Left : bool; v_l_St_3_Joystick_St_2_Right : int;
+    v_r_St_3_Joystick_St_2_Right : int; dir_St_3_Joystick_St_2_Right : int;
+    ns_2_St_2_Right : st_2; nr_2_St_2_Right : bool;
+    v_l_St_3_Joystick_St_2_Forward : int;
+    v_r_St_3_Joystick_St_2_Forward : int;
+    dir_St_3_Joystick_St_2_Forward : int; ns_2_St_2_Forward : st_2;
+    nr_2_St_2_Forward : bool; v_l_St_3_Joystick_St_2_Backward : int;
+    v_r_St_3_Joystick_St_2_Backward : int;
+    dir_St_3_Joystick_St_2_Backward : int; ns_2_St_2_Backward : st_2;
+    nr_2_St_2_Backward : bool; ck_6 : st_2; s_2_St_2_Idle : st_2;
+    r_2_St_2_Idle : bool; s_2_St_2_Left : st_2; r_2_St_2_Left : bool;
+    s_2_St_2_Right : st_2; r_2_St_2_Right : bool; s_2_St_2_Forward : st_2;
+    r_2_St_2_Forward : bool; s_2_St_2_Backward : st_2;
+    r_2_St_2_Backward : bool; v_78 : st_2; v_68 : bool; v_69 : bool;
+    v_70 : bool; v_71 : bool; v_72 : st_2; v_73 : bool; v_74 : st_2;
+    v_75 : bool; v_76 : st_2; v_77 : bool; v_58 : bool; v_59 : bool;
+    v_60 : bool; v_61 : bool; v_62 : st_2; v_63 : bool; v_64 : st_2;
+    v_65 : bool; v_66 : st_2; v_67 : bool; v_48 : bool; v_49 : bool;
+    v_50 : bool; v_51 : bool; v_52 : st_2; v_53 : bool; v_54 : st_2;
+    v_55 : bool; v_56 : st_2; v_57 : bool; v_38 : bool; v_39 : bool;
+    v_40 : bool; v_41 : bool; v_42 : st_2; v_43 : bool; v_44 : st_2;
+    v_45 : bool; v_46 : st_2; v_47 : bool; v_28 : bool; v_29 : bool;
+    v_30 : bool; v_31 : bool; v_32 : st_2; v_33 : bool; v_34 : st_2;
+    v_35 : bool; v_36 : st_2; v_37 : bool; ck : st_3;
+    s_3_St_3_Inputval : st_3; r_3_St_3_Inputval : bool;
+    s_3_St_3_White : st_3; r_3_St_3_White : bool; s_3_St_3_Black : st_3;
+    r_3_St_3_Black : bool; s_3_St_3_Joystick : st_3;
+    r_3_St_3_Joystick : bool; v_27 : bool; v_16 : bool; v_17 : bool;
+    v_18 : bool; v_19 : bool; v_20 : bool; v_21 : bool; v_22 : bool;
+    v_23 : st_3; v_24 : bool; v_25 : st_3; v_26 : bool; v_15 : bool;
+    v : bool;
+let
+  inputvalue_1 = 0 fby inputvalue;
+  pnr_3 = false fby nr_3;
+  ck_1 = s_3;
+  inputvalue_St_3_Inputval =
+    if v_422
+    then (j_input when St_3_Inputval(ck_1))
+    else (inputvalue_1 when St_3_Inputval(ck_1));
+  v_422 = not(v_421);
+  v_421 = ((j_input when St_3_Inputval(ck_1)) = 0);
+  dir_St_3_Inputval = 0;
+  v_r_St_3_Inputval = 0;
+  v_l_St_3_Inputval = 0;
+  sen_St_3_Inputval = [v_416; v_417; v_418; v_419; v_420];
+  v_420 = (1023 - (sen4 when St_3_Inputval(ck_1)));
+  v_419 = (1023 - (sen3 when St_3_Inputval(ck_1)));
+  v_418 = (1023 - (sen2 when St_3_Inputval(ck_1)));
+  v_417 = (1023 - (sen1 when St_3_Inputval(ck_1)));
+  v_416 = (1023 - (sen0 when St_3_Inputval(ck_1)));
+  nr_3_St_3_Inputval = false;
+  ns_3_St_3_Inputval = St_3_Inputval;
+  inputvalue_St_3_White = (inputvalue_1 when St_3_White(ck_1));
+  pnr = if (r_3 when St_3_White(ck_1)) then false else v_415;
+  v_415 = false fby nr;
+  ck_3 = s;
+  v_r_St_3_White_St_Idle = 50;
+  v_l_St_3_White_St_Idle = 50;
+  dir_St_3_White_St_Idle = 1;
+  nr_St_Idle = false;
+  ns_St_Idle = St_Idle;
+  (v_l_St_3_White_St_Pid, v_r_St_3_White_St_Pid) =
+    pid(v_410, v_411, v_412, v_413, v_414) every r_8;
+  v_414 = ((sen when St_3_White(ck_1)) when St_Pid(ck_3))[4];
+  v_413 = ((sen when St_3_White(ck_1)) when St_Pid(ck_3))[3];
+  v_412 = ((sen when St_3_White(ck_1)) when St_Pid(ck_3))[2];
+  v_411 = ((sen when St_3_White(ck_1)) when St_Pid(ck_3))[1];
+  v_410 = ((sen when St_3_White(ck_1)) when St_Pid(ck_3))[0];
+  dir_St_3_White_St_Pid = 2;
+  nr_St_Pid = false;
+  ns_St_Pid = St_Pid;
+  r_8 =
+    (((r_3 when St_3_White(ck_1)) when St_Pid(ck_3)) or
+     (r when St_Pid(ck_3)));
+  v_r_St_3_White_St_Turnleft = 100;
+  v_l_St_3_White_St_Turnleft = 100;
+  dir_St_3_White_St_Turnleft = 3;
+  nr_St_Turnleft = false;
+  ns_St_Turnleft = St_Turnleft;
+  v_r_St_3_White_St_Turnright = 100;
+  v_l_St_3_White_St_Turnright = 100;
+  dir_St_3_White_St_Turnright = 4;
+  nr_St_Turnright = false;
+  ns_St_Turnright = St_Turnright;
+  v_r_St_3_White_St_Stop = 0;
+  v_l_St_3_White_St_Stop = 0;
+  dir_St_3_White_St_Stop = 0;
+  nr_St_Stop = false;
+  ns_St_Stop = St_Stop;
+  v_l_St_3_White =
+    merge ck_3
+      (St_Stop -> v_l_St_3_White_St_Stop)
+      (St_Turnright -> v_l_St_3_White_St_Turnright)
+      (St_Turnleft -> v_l_St_3_White_St_Turnleft)
+      (St_Pid -> v_l_St_3_White_St_Pid)(St_Idle -> v_l_St_3_White_St_Idle);
+  v_r_St_3_White =
+    merge ck_3
+      (St_Stop -> v_r_St_3_White_St_Stop)
+      (St_Turnright -> v_r_St_3_White_St_Turnright)
+      (St_Turnleft -> v_r_St_3_White_St_Turnleft)
+      (St_Pid -> v_r_St_3_White_St_Pid)(St_Idle -> v_r_St_3_White_St_Idle);
+  dir_St_3_White =
+    merge ck_3
+      (St_Stop -> dir_St_3_White_St_Stop)
+      (St_Turnright -> dir_St_3_White_St_Turnright)
+      (St_Turnleft -> dir_St_3_White_St_Turnleft)
+      (St_Pid -> dir_St_3_White_St_Pid)(St_Idle -> dir_St_3_White_St_Idle);
+  ns =
+    merge ck_3
+      (St_Stop -> ns_St_Stop)(St_Turnright -> ns_St_Turnright)
+      (St_Turnleft -> ns_St_Turnleft)(St_Pid -> ns_St_Pid)
+      (St_Idle -> ns_St_Idle);
+  nr =
+    merge ck_3
+      (St_Stop -> nr_St_Stop)(St_Turnright -> nr_St_Turnright)
+      (St_Turnleft -> nr_St_Turnleft)(St_Pid -> nr_St_Pid)
+      (St_Idle -> nr_St_Idle);
+  ck_2 = if (r_3 when St_3_White(ck_1)) then St_Idle else v_409;
+  v_409 = St_Idle fby ns;
+  r_St_Idle = if v_400 then true else v_408;
+  s_St_Idle = if v_400 then St_Pid else v_407;
+  v_408 = if v_402 then true else v_406;
+  v_407 = if v_402 then St_Turnleft else v_405;
+  v_406 = if v_404 then true else (pnr when St_Idle(ck_2));
+  v_405 = if v_404 then St_Turnright else St_Idle;
+  v_404 = (v_403 < 500);
+  v_403 = ((sen when St_3_White(ck_1)) when St_Idle(ck_2))[4];
+  v_402 = (v_401 < 500);
+  v_401 = ((sen when St_3_White(ck_1)) when St_Idle(ck_2))[0];
+  v_400 = (v_397 or v_399);
+  v_399 = (v_398 < 500);
+  v_398 = ((sen when St_3_White(ck_1)) when St_Idle(ck_2))[3];
+  v_397 = (v_396 < 500);
+  v_396 = ((sen when St_3_White(ck_1)) when St_Idle(ck_2))[1];
+  r_St_Pid = if v_391 then true else v_395;
+  s_St_Pid = if v_391 then St_Turnleft else v_394;
+  v_395 = if v_393 then true else (pnr when St_Pid(ck_2));
+  v_394 = if v_393 then St_Turnright else St_Pid;
+  v_393 = (v_392 < 500);
+  v_392 = ((sen when St_3_White(ck_1)) when St_Pid(ck_2))[4];
+  v_391 = (v_390 < 500);
+  v_390 = ((sen when St_3_White(ck_1)) when St_Pid(ck_2))[0];
+  r_St_Turnleft = if v_385 then true else v_389;
+  s_St_Turnleft = if v_385 then St_Pid else v_388;
+  v_389 = if v_387 then true else (pnr when St_Turnleft(ck_2));
+  v_388 = if v_387 then St_Turnright else St_Turnleft;
+  v_387 = (v_386 < 500);
+  v_386 = ((sen when St_3_White(ck_1)) when St_Turnleft(ck_2))[4];
+  v_385 = (v_382 or v_384);
+  v_384 = (v_383 < 600);
+  v_383 = ((sen when St_3_White(ck_1)) when St_Turnleft(ck_2))[2];
+  v_382 = (v_379 or v_381);
+  v_381 = (v_380 < 600);
+  v_380 = ((sen when St_3_White(ck_1)) when St_Turnleft(ck_2))[3];
+  v_379 = (v_378 < 600);
+  v_378 = ((sen when St_3_White(ck_1)) when St_Turnleft(ck_2))[1];
+  r_St_Turnright = if v_373 then true else v_377;
+  s_St_Turnright = if v_373 then St_Pid else v_376;
+  v_377 = if v_375 then true else (pnr when St_Turnright(ck_2));
+  v_376 = if v_375 then St_Turnleft else St_Turnright;
+  v_375 = (v_374 < 500);
+  v_374 = ((sen when St_3_White(ck_1)) when St_Turnright(ck_2))[0];
+  v_373 = (v_370 or v_372);
+  v_372 = (v_371 < 600);
+  v_371 = ((sen when St_3_White(ck_1)) when St_Turnright(ck_2))[2];
+  v_370 = (v_367 or v_369);
+  v_369 = (v_368 < 600);
+  v_368 = ((sen when St_3_White(ck_1)) when St_Turnright(ck_2))[3];
+  v_367 = (v_366 < 600);
+  v_366 = ((sen when St_3_White(ck_1)) when St_Turnright(ck_2))[1];
+  r_St_Stop = if v_357 then true else v_365;
+  s_St_Stop = if v_357 then St_Pid else v_364;
+  v_365 = if v_359 then true else v_363;
+  v_364 = if v_359 then St_Turnleft else v_362;
+  v_363 = if v_361 then true else (pnr when St_Stop(ck_2));
+  v_362 = if v_361 then St_Turnright else St_Stop;
+  v_361 = (v_360 < 500);
+  v_360 = ((sen when St_3_White(ck_1)) when St_Stop(ck_2))[4];
+  v_359 = (v_358 < 500);
+  v_358 = ((sen when St_3_White(ck_1)) when St_Stop(ck_2))[0];
+  v_357 = (v_354 or v_356);
+  v_356 = (v_355 < 500);
+  v_355 = ((sen when St_3_White(ck_1)) when St_Stop(ck_2))[3];
+  v_354 = (v_353 < 500);
+  v_353 = ((sen when St_3_White(ck_1)) when St_Stop(ck_2))[1];
+  s =
+    merge ck_2
+      (St_Stop -> s_St_Stop)(St_Turnright -> s_St_Turnright)
+      (St_Turnleft -> s_St_Turnleft)(St_Pid -> s_St_Pid)
+      (St_Idle -> s_St_Idle);
+  r =
+    merge ck_2
+      (St_Stop -> r_St_Stop)(St_Turnright -> r_St_Turnright)
+      (St_Turnleft -> r_St_Turnleft)(St_Pid -> r_St_Pid)
+      (St_Idle -> r_St_Idle);
+  sen_St_3_White = [v_348; v_349; v_350; v_351; v_352];
+  v_352 = (1023 - (sen4 when St_3_White(ck_1)));
+  v_351 = (1023 - (sen3 when St_3_White(ck_1)));
+  v_350 = (1023 - (sen2 when St_3_White(ck_1)));
+  v_349 = (1023 - (sen1 when St_3_White(ck_1)));
+  v_348 = (1023 - (sen0 when St_3_White(ck_1)));
+  nr_3_St_3_White = false;
+  ns_3_St_3_White = St_3_White;
+  bound_right_1 = if (r_3 when St_3_Black(ck_1)) then 0 else v_347;
+  v_347 = 0 fby bound_right;
+  bound_left_1 = if (r_3 when St_3_Black(ck_1)) then 0 else v_346;
+  v_346 = 0 fby bound_left;
+  count_1 = if (r_3 when St_3_Black(ck_1)) then 0 else v_345;
+  v_345 = 0 fby count;
+  inputvalue_St_3_Black = (inputvalue_1 when St_3_Black(ck_1));
+  pnr_1 = if (r_3 when St_3_Black(ck_1)) then false else v_344;
+  v_344 = false fby nr_1;
+  ck_5 = s_1;
+  bound_right_St_1_Idle = (bound_right_1 when St_1_Idle(ck_5));
+  bound_left_St_1_Idle = (bound_left_1 when St_1_Idle(ck_5));
+  count_St_1_Idle = (count_1 when St_1_Idle(ck_5));
+  v_r_St_3_Black_St_1_Idle = 50;
+  v_l_St_3_Black_St_1_Idle = 50;
+  dir_St_3_Black_St_1_Idle = 1;
+  nr_1_St_1_Idle = false;
+  ns_1_St_1_Idle = St_1_Idle;
+  bound_right_St_1_Pid = (bound_right_1 when St_1_Pid(ck_5));
+  bound_left_St_1_Pid = (bound_left_1 when St_1_Pid(ck_5));
+  count_St_1_Pid = (count_1 when St_1_Pid(ck_5));
+  (v_l_St_3_Black_St_1_Pid, v_r_St_3_Black_St_1_Pid) =
+    pid(v_339, v_340, v_341, v_342, v_343) every r_7;
+  v_343 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_5))[4];
+  v_342 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_5))[3];
+  v_341 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_5))[2];
+  v_340 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_5))[1];
+  v_339 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_5))[0];
+  dir_St_3_Black_St_1_Pid = 2;
+  nr_1_St_1_Pid = false;
+  ns_1_St_1_Pid = St_1_Pid;
+  r_7 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Pid(ck_5)) or
+     (r_1 when St_1_Pid(ck_5)));
+  bound_right_St_1_Turnleft = (bound_right_1 when St_1_Turnleft(ck_5));
+  bound_left_St_1_Turnleft = (bound_left_1 when St_1_Turnleft(ck_5));
+  count_St_1_Turnleft = (count_1 when St_1_Turnleft(ck_5));
+  v_r_St_3_Black_St_1_Turnleft = 90;
+  v_l_St_3_Black_St_1_Turnleft = 90;
+  dir_St_3_Black_St_1_Turnleft = 3;
+  nr_1_St_1_Turnleft = false;
+  ns_1_St_1_Turnleft = St_1_Turnleft;
+  bound_right_St_1_Turnright = (bound_right_1 when St_1_Turnright(ck_5));
+  bound_left_St_1_Turnright = (bound_left_1 when St_1_Turnright(ck_5));
+  count_St_1_Turnright = (count_1 when St_1_Turnright(ck_5));
+  v_r_St_3_Black_St_1_Turnright = 90;
+  v_l_St_3_Black_St_1_Turnright = 90;
+  dir_St_3_Black_St_1_Turnright = 4;
+  nr_1_St_1_Turnright = false;
+  ns_1_St_1_Turnright = St_1_Turnright;
+  bound_right_St_1_Stop = (bound_right_1 when St_1_Stop(ck_5));
+  bound_left_St_1_Stop = (bound_left_1 when St_1_Stop(ck_5));
+  count_St_1_Stop = (count_1 when St_1_Stop(ck_5));
+  v_r_St_3_Black_St_1_Stop = 0;
+  v_l_St_3_Black_St_1_Stop = 0;
+  dir_St_3_Black_St_1_Stop = 0;
+  time = if v_334 then 2 else v_338;
+  v_338 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Stop(ck_5))
+    then v_336
+    else v_337;
+  v_337 = pre time;
+  v_336 = (v_335 - 1);
+  v_335 = pre time;
+  v_334 = if v_332 then true else v_333;
+  v_333 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Stop(ck_5)) or
+     (r_1 when St_1_Stop(ck_5)));
+  v_332 = true fby false;
+  nr_1_St_1_Stop = if v_331 then true else false;
+  ns_1_St_1_Stop = if v_331 then St_1_Parkingstart else St_1_Stop;
+  v_331 = (time = 0);
+  bound_right_St_1_Box = (bound_right_1 when St_1_Box(ck_5));
+  bound_left_St_1_Box = (bound_left_1 when St_1_Box(ck_5));
+  count_St_1_Box = ((count_1 when St_1_Box(ck_5)) + 1);
+  v_r_St_3_Black_St_1_Box = 100;
+  v_l_St_3_Black_St_1_Box = 100;
+  dir_St_3_Black_St_1_Box = 1;
+  nr_1_St_1_Box = if v_314 then true else v_330;
+  ns_1_St_1_Box = if v_314 then St_1_Boxturnright else v_329;
+  v_330 = if v_319 then true else v_328;
+  v_329 = if v_319 then St_1_Parkingleft else v_327;
+  v_328 = if v_324 then true else v_326;
+  v_327 = if v_324 then St_1_Parkingright else v_325;
+  v_326 = if true then true else false;
+  v_325 = if true then St_1_Boxturnleft else St_1_Box;
+  v_324 = (v_320 & v_323);
+  v_323 = (v_321 or v_322);
+  v_322 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 5);
+  v_321 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 3);
+  v_320 = ((count when St_1_Box(ck_5)) = 4);
+  v_319 = (v_315 & v_318);
+  v_318 = (v_316 or v_317);
+  v_317 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 4);
+  v_316 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 2);
+  v_315 = ((count when St_1_Box(ck_5)) = 4);
+  v_314 = (v_310 or v_313);
+  v_313 = (v_311 & v_312);
+  v_312 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 5);
+  v_311 = ((count when St_1_Box(ck_5)) = 3);
+  v_310 = (v_306 or v_309);
+  v_309 = (v_307 & v_308);
+  v_308 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 5);
+  v_307 = ((count when St_1_Box(ck_5)) = 1);
+  v_306 = (v_302 or v_305);
+  v_305 = (v_303 & v_304);
+  v_304 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 3);
+  v_303 = ((count when St_1_Box(ck_5)) = 3);
+  v_302 = (v_298 or v_301);
+  v_301 = (v_299 & v_300);
+  v_300 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 4);
+  v_299 = ((count when St_1_Box(ck_5)) = 2);
+  v_298 = (v_294 or v_297);
+  v_297 = (v_295 & v_296);
+  v_296 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 4);
+  v_295 = ((count when St_1_Box(ck_5)) = 1);
+  v_294 = (v_292 & v_293);
+  v_293 = (((inputvalue when St_3_Black(ck_1)) when St_1_Box(ck_5)) = 2);
+  v_292 = ((count when St_1_Box(ck_5)) = 2);
+  bound_right_St_1_Boxturnleft = (bound_right_1 when St_1_Boxturnleft(ck_5));
+  bound_left_St_1_Boxturnleft = (bound_left_1 when St_1_Boxturnleft(ck_5));
+  count_St_1_Boxturnleft = (count_1 when St_1_Boxturnleft(ck_5));
+  v_r_St_3_Black_St_1_Boxturnleft = 90;
+  v_l_St_3_Black_St_1_Boxturnleft = 90;
+  dir_St_3_Black_St_1_Boxturnleft = 3;
+  nr_1_St_1_Boxturnleft = if v_291 then true else false;
+  ns_1_St_1_Boxturnleft = if v_291 then St_1_Boxpid else St_1_Boxturnleft;
+  v_291 = not(v_290);
+  v_290 = (v_284 & v_289);
+  v_289 = (v_286 or v_288);
+  v_288 = (v_287 < 600);
+  v_287 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnleft(ck_5))[4];
+  v_286 = (v_285 < 600);
+  v_285 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnleft(ck_5))[0];
+  v_284 = (v_281 & v_283);
+  v_283 = (v_282 < 600);
+  v_282 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnleft(ck_5))[3];
+  v_281 = (v_278 & v_280);
+  v_280 = (v_279 < 600);
+  v_279 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnleft(ck_5))[2];
+  v_278 = (v_277 < 600);
+  v_277 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnleft(ck_5))[1];
+  bound_right_St_1_Boxturnright =
+    (bound_right_1 when St_1_Boxturnright(ck_5));
+  bound_left_St_1_Boxturnright = (bound_left_1 when St_1_Boxturnright(ck_5));
+  count_St_1_Boxturnright = (count_1 when St_1_Boxturnright(ck_5));
+  v_r_St_3_Black_St_1_Boxturnright = 90;
+  v_l_St_3_Black_St_1_Boxturnright = 90;
+  dir_St_3_Black_St_1_Boxturnright = 4;
+  nr_1_St_1_Boxturnright = if v_276 then true else false;
+  ns_1_St_1_Boxturnright = if v_276 then St_1_Boxpid else St_1_Boxturnright;
+  v_276 = not(v_275);
+  v_275 = (v_269 & v_274);
+  v_274 = (v_271 or v_273);
+  v_273 = (v_272 < 600);
+  v_272 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnright(ck_5))[4];
+  v_271 = (v_270 < 600);
+  v_270 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnright(ck_5))[0];
+  v_269 = (v_266 & v_268);
+  v_268 = (v_267 < 600);
+  v_267 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnright(ck_5))[3];
+  v_266 = (v_263 & v_265);
+  v_265 = (v_264 < 600);
+  v_264 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnright(ck_5))[2];
+  v_263 = (v_262 < 600);
+  v_262 = ((sen when St_3_Black(ck_1)) when St_1_Boxturnright(ck_5))[1];
+  bound_right_St_1_Boxpid = (bound_right_1 when St_1_Boxpid(ck_5));
+  bound_left_St_1_Boxpid = (bound_left_1 when St_1_Boxpid(ck_5));
+  count_St_1_Boxpid = (count_1 when St_1_Boxpid(ck_5));
+  (v_l_St_3_Black_St_1_Boxpid, v_r_St_3_Black_St_1_Boxpid) =
+    pid(v_257, v_258, v_259, v_260, v_261) every r_6;
+  v_261 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_5))[4];
+  v_260 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_5))[3];
+  v_259 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_5))[2];
+  v_258 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_5))[1];
+  v_257 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_5))[0];
+  dir_St_3_Black_St_1_Boxpid = 2;
+  nr_1_St_1_Boxpid = false;
+  ns_1_St_1_Boxpid = St_1_Boxpid;
+  r_6 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Boxpid(ck_5)) or
+     (r_1 when St_1_Boxpid(ck_5)));
+  bound_right_St_1_Parkingleft = (bound_right_1 when St_1_Parkingleft(ck_5));
+  bound_left_St_1_Parkingleft = (bound_left_1 when St_1_Parkingleft(ck_5));
+  count_St_1_Parkingleft = (count_1 when St_1_Parkingleft(ck_5));
+  v_r_St_3_Black_St_1_Parkingleft = 100;
+  v_l_St_3_Black_St_1_Parkingleft = 100;
+  dir_St_3_Black_St_1_Parkingleft = 3;
+  nr_1_St_1_Parkingleft = false;
+  ns_1_St_1_Parkingleft = St_1_Parkingleft;
+  bound_right_St_1_Parkingright =
+    (bound_right_1 when St_1_Parkingright(ck_5));
+  bound_left_St_1_Parkingright = (bound_left_1 when St_1_Parkingright(ck_5));
+  count_St_1_Parkingright = (count_1 when St_1_Parkingright(ck_5));
+  v_r_St_3_Black_St_1_Parkingright = 100;
+  v_l_St_3_Black_St_1_Parkingright = 100;
+  dir_St_3_Black_St_1_Parkingright = 4;
+  nr_1_St_1_Parkingright = false;
+  ns_1_St_1_Parkingright = St_1_Parkingright;
+  bound_right_St_1_Parkingpid = (bound_right_1 when St_1_Parkingpid(ck_5));
+  bound_left_St_1_Parkingpid = (bound_left_1 when St_1_Parkingpid(ck_5));
+  count_St_1_Parkingpid = (count_1 when St_1_Parkingpid(ck_5));
+  (v_l_St_3_Black_St_1_Parkingpid, v_r_St_3_Black_St_1_Parkingpid) =
+    pid(v_252, v_253, v_254, v_255, v_256) every r_5;
+  v_256 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5))[4];
+  v_255 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5))[3];
+  v_254 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5))[2];
+  v_253 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5))[1];
+  v_252 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5))[0];
+  dir_St_3_Black_St_1_Parkingpid = 2;
+  nr_1_St_1_Parkingpid = false;
+  ns_1_St_1_Parkingpid = St_1_Parkingpid;
+  r_5 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkingpid(ck_5)) or
+     (r_1 when St_1_Parkingpid(ck_5)));
+  count_St_1_Parkingstart = (count_1 when St_1_Parkingstart(ck_5));
+  (v_l_St_3_Black_St_1_Parkingstart, v_r_St_3_Black_St_1_Parkingstart) =
+    pid(v_247, v_248, v_249, v_250, v_251) every r_4;
+  v_251 = ((sen when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))[4];
+  v_250 = ((sen when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))[3];
+  v_249 = ((sen when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))[2];
+  v_248 = ((sen when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))[1];
+  v_247 = ((sen when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))[0];
+  time_1 = if v_242 then 7 else v_246;
+  v_246 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5))
+    then v_244
+    else v_245;
+  v_245 = pre time_1;
+  v_244 = (v_243 - 1);
+  v_243 = pre time_1;
+  v_242 = if v_240 then true else v_241;
+  v_241 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5)) or
+     (r_1 when St_1_Parkingstart(ck_5)));
+  v_240 = true fby false;
+  bound_right_St_1_Parkingstart =
+    ((bound_right_1 when St_1_Parkingstart(ck_5)) + v_239);
+  v_239 = if v_238 then 1 else 0;
+  v_238 =
+    (((ir_right when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5)) = 0);
+  bound_left_St_1_Parkingstart =
+    ((bound_left_1 when St_1_Parkingstart(ck_5)) + v_237);
+  v_237 = if v_236 then 1 else 0;
+  v_236 =
+    (((ir_left when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5)) = 0);
+  dir_St_3_Black_St_1_Parkingstart = 2;
+  nr_1_St_1_Parkingstart = if v_235 then true else false;
+  ns_1_St_1_Parkingstart =
+    if v_235 then St_1_Parkingcheck else St_1_Parkingstart;
+  v_235 = (time_1 = 0);
+  r_4 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkingstart(ck_5)) or
+     (r_1 when St_1_Parkingstart(ck_5)));
+  bound_right_St_1_Parkingcheck =
+    (bound_right_1 when St_1_Parkingcheck(ck_5));
+  bound_left_St_1_Parkingcheck = (bound_left_1 when St_1_Parkingcheck(ck_5));
+  count_St_1_Parkingcheck = (count_1 when St_1_Parkingcheck(ck_5));
+  dir_St_3_Black_St_1_Parkingcheck = 0;
+  v_r_St_3_Black_St_1_Parkingcheck = 0;
+  v_l_St_3_Black_St_1_Parkingcheck = 0;
+  nr_1_St_1_Parkingcheck = if v_229 then true else v_234;
+  ns_1_St_1_Parkingcheck = if v_229 then St_1_Parkleft else v_233;
+  v_234 = if v_230 then true else v_232;
+  v_233 = if v_230 then St_1_Parkright else v_231;
+  v_232 = if true then true else false;
+  v_231 = if true then St_1_Parkingrestart else St_1_Parkingcheck;
+  v_230 = ((bound_right when St_1_Parkingcheck(ck_5)) = 0);
+  v_229 = ((bound_left when St_1_Parkingcheck(ck_5)) = 0);
+  bound_right_St_1_Parkleft = (bound_right_1 when St_1_Parkleft(ck_5));
+  bound_left_St_1_Parkleft = (bound_left_1 when St_1_Parkleft(ck_5));
+  count_St_1_Parkleft = (count_1 when St_1_Parkleft(ck_5));
+  time_2 = if v_224 then 2 else v_228;
+  v_228 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Parkleft(ck_5))
+    then v_226
+    else v_227;
+  v_227 = pre time_2;
+  v_226 = (v_225 - 1);
+  v_225 = pre time_2;
+  v_224 = if v_222 then true else v_223;
+  v_223 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkleft(ck_5)) or
+     (r_1 when St_1_Parkleft(ck_5)));
+  v_222 = true fby false;
+  dir_St_3_Black_St_1_Parkleft = 0;
+  v_r_St_3_Black_St_1_Parkleft = 0;
+  v_l_St_3_Black_St_1_Parkleft = 0;
+  nr_1_St_1_Parkleft = if v_221 then true else false;
+  ns_1_St_1_Parkleft = if v_221 then St_1_Backleft else St_1_Parkleft;
+  v_221 = (time_2 = 0);
+  bound_right_St_1_Parkright = (bound_right_1 when St_1_Parkright(ck_5));
+  bound_left_St_1_Parkright = (bound_left_1 when St_1_Parkright(ck_5));
+  count_St_1_Parkright = (count_1 when St_1_Parkright(ck_5));
+  time_3 = if v_216 then 2 else v_220;
+  v_220 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Parkright(ck_5))
+    then v_218
+    else v_219;
+  v_219 = pre time_3;
+  v_218 = (v_217 - 1);
+  v_217 = pre time_3;
+  v_216 = if v_214 then true else v_215;
+  v_215 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkright(ck_5)) or
+     (r_1 when St_1_Parkright(ck_5)));
+  v_214 = true fby false;
+  dir_St_3_Black_St_1_Parkright = 0;
+  v_r_St_3_Black_St_1_Parkright = 0;
+  v_l_St_3_Black_St_1_Parkright = 0;
+  nr_1_St_1_Parkright = if v_213 then true else false;
+  ns_1_St_1_Parkright = if v_213 then St_1_Backright else St_1_Parkright;
+  v_213 = (time_3 = 0);
+  count_St_1_Parkingrestart = (count_1 when St_1_Parkingrestart(ck_5));
+  dir_St_3_Black_St_1_Parkingrestart = 0;
+  v_r_St_3_Black_St_1_Parkingrestart = 0;
+  v_l_St_3_Black_St_1_Parkingrestart = 0;
+  bound_right_St_1_Parkingrestart = 0;
+  bound_left_St_1_Parkingrestart = 0;
+  time_4 = if v_208 then 2 else v_212;
+  v_212 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Parkingrestart(ck_5))
+    then v_210
+    else v_211;
+  v_211 = pre time_4;
+  v_210 = (v_209 - 1);
+  v_209 = pre time_4;
+  v_208 = if v_206 then true else v_207;
+  v_207 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Parkingrestart(ck_5)) or
+     (r_1 when St_1_Parkingrestart(ck_5)));
+  v_206 = true fby false;
+  nr_1_St_1_Parkingrestart = if true then true else false;
+  ns_1_St_1_Parkingrestart =
+    if true then St_1_Parkingstart else St_1_Parkingrestart;
+  bound_right_St_1_Backright = (bound_right_1 when St_1_Backright(ck_5));
+  bound_left_St_1_Backright = (bound_left_1 when St_1_Backright(ck_5));
+  count_St_1_Backright = (count_1 when St_1_Backright(ck_5));
+  time_5 = if v_201 then 2 else v_205;
+  v_205 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Backright(ck_5))
+    then v_203
+    else v_204;
+  v_204 = pre time_5;
+  v_203 = (v_202 - 1);
+  v_202 = pre time_5;
+  v_201 = if v_199 then true else v_200;
+  v_200 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Backright(ck_5)) or
+     (r_1 when St_1_Backright(ck_5)));
+  v_199 = true fby false;
+  dir_St_3_Black_St_1_Backright = 5;
+  v_r_St_3_Black_St_1_Backright = 63;
+  v_l_St_3_Black_St_1_Backright = 40;
+  nr_1_St_1_Backright = if v_198 then true else false;
+  ns_1_St_1_Backright = if v_198 then St_1_Parked else St_1_Backright;
+  v_198 = (time_5 = 0);
+  bound_right_St_1_Backleft = (bound_right_1 when St_1_Backleft(ck_5));
+  bound_left_St_1_Backleft = (bound_left_1 when St_1_Backleft(ck_5));
+  count_St_1_Backleft = (count_1 when St_1_Backleft(ck_5));
+  time_6 = if v_193 then 2 else v_197;
+  v_197 =
+    if ((sec when St_3_Black(ck_1)) when St_1_Backleft(ck_5))
+    then v_195
+    else v_196;
+  v_196 = pre time_6;
+  v_195 = (v_194 - 1);
+  v_194 = pre time_6;
+  v_193 = if v_191 then true else v_192;
+  v_192 =
+    (((r_3 when St_3_Black(ck_1)) when St_1_Backleft(ck_5)) or
+     (r_1 when St_1_Backleft(ck_5)));
+  v_191 = true fby false;
+  dir_St_3_Black_St_1_Backleft = 6;
+  v_r_St_3_Black_St_1_Backleft = 40;
+  v_l_St_3_Black_St_1_Backleft = 63;
+  nr_1_St_1_Backleft = if v_190 then true else false;
+  ns_1_St_1_Backleft = if v_190 then St_1_Parked else St_1_Backleft;
+  v_190 = (time_6 = 0);
+  bound_right_St_1_Parked = (bound_right_1 when St_1_Parked(ck_5));
+  bound_left_St_1_Parked = (bound_left_1 when St_1_Parked(ck_5));
+  count_St_1_Parked = (count_1 when St_1_Parked(ck_5));
+  dir_St_3_Black_St_1_Parked = 0;
+  v_r_St_3_Black_St_1_Parked = 0;
+  v_l_St_3_Black_St_1_Parked = 0;
+  nr_1_St_1_Parked = false;
+  ns_1_St_1_Parked = St_1_Parked;
+  v_l_St_3_Black =
+    merge ck_5
+      (St_1_Parked -> v_l_St_3_Black_St_1_Parked)
+      (St_1_Backleft -> v_l_St_3_Black_St_1_Backleft)
+      (St_1_Backright -> v_l_St_3_Black_St_1_Backright)
+      (St_1_Parkingrestart -> v_l_St_3_Black_St_1_Parkingrestart)
+      (St_1_Parkright -> v_l_St_3_Black_St_1_Parkright)
+      (St_1_Parkleft -> v_l_St_3_Black_St_1_Parkleft)
+      (St_1_Parkingcheck -> v_l_St_3_Black_St_1_Parkingcheck)
+      (St_1_Parkingstart -> v_l_St_3_Black_St_1_Parkingstart)
+      (St_1_Parkingpid -> v_l_St_3_Black_St_1_Parkingpid)
+      (St_1_Parkingright -> v_l_St_3_Black_St_1_Parkingright)
+      (St_1_Parkingleft -> v_l_St_3_Black_St_1_Parkingleft)
+      (St_1_Boxpid -> v_l_St_3_Black_St_1_Boxpid)
+      (St_1_Boxturnright -> v_l_St_3_Black_St_1_Boxturnright)
+      (St_1_Boxturnleft -> v_l_St_3_Black_St_1_Boxturnleft)
+      (St_1_Box -> v_l_St_3_Black_St_1_Box)
+      (St_1_Stop -> v_l_St_3_Black_St_1_Stop)
+      (St_1_Turnright -> v_l_St_3_Black_St_1_Turnright)
+      (St_1_Turnleft -> v_l_St_3_Black_St_1_Turnleft)
+      (St_1_Pid -> v_l_St_3_Black_St_1_Pid)
+      (St_1_Idle -> v_l_St_3_Black_St_1_Idle);
+  v_r_St_3_Black =
+    merge ck_5
+      (St_1_Parked -> v_r_St_3_Black_St_1_Parked)
+      (St_1_Backleft -> v_r_St_3_Black_St_1_Backleft)
+      (St_1_Backright -> v_r_St_3_Black_St_1_Backright)
+      (St_1_Parkingrestart -> v_r_St_3_Black_St_1_Parkingrestart)
+      (St_1_Parkright -> v_r_St_3_Black_St_1_Parkright)
+      (St_1_Parkleft -> v_r_St_3_Black_St_1_Parkleft)
+      (St_1_Parkingcheck -> v_r_St_3_Black_St_1_Parkingcheck)
+      (St_1_Parkingstart -> v_r_St_3_Black_St_1_Parkingstart)
+      (St_1_Parkingpid -> v_r_St_3_Black_St_1_Parkingpid)
+      (St_1_Parkingright -> v_r_St_3_Black_St_1_Parkingright)
+      (St_1_Parkingleft -> v_r_St_3_Black_St_1_Parkingleft)
+      (St_1_Boxpid -> v_r_St_3_Black_St_1_Boxpid)
+      (St_1_Boxturnright -> v_r_St_3_Black_St_1_Boxturnright)
+      (St_1_Boxturnleft -> v_r_St_3_Black_St_1_Boxturnleft)
+      (St_1_Box -> v_r_St_3_Black_St_1_Box)
+      (St_1_Stop -> v_r_St_3_Black_St_1_Stop)
+      (St_1_Turnright -> v_r_St_3_Black_St_1_Turnright)
+      (St_1_Turnleft -> v_r_St_3_Black_St_1_Turnleft)
+      (St_1_Pid -> v_r_St_3_Black_St_1_Pid)
+      (St_1_Idle -> v_r_St_3_Black_St_1_Idle);
+  dir_St_3_Black =
+    merge ck_5
+      (St_1_Parked -> dir_St_3_Black_St_1_Parked)
+      (St_1_Backleft -> dir_St_3_Black_St_1_Backleft)
+      (St_1_Backright -> dir_St_3_Black_St_1_Backright)
+      (St_1_Parkingrestart -> dir_St_3_Black_St_1_Parkingrestart)
+      (St_1_Parkright -> dir_St_3_Black_St_1_Parkright)
+      (St_1_Parkleft -> dir_St_3_Black_St_1_Parkleft)
+      (St_1_Parkingcheck -> dir_St_3_Black_St_1_Parkingcheck)
+      (St_1_Parkingstart -> dir_St_3_Black_St_1_Parkingstart)
+      (St_1_Parkingpid -> dir_St_3_Black_St_1_Parkingpid)
+      (St_1_Parkingright -> dir_St_3_Black_St_1_Parkingright)
+      (St_1_Parkingleft -> dir_St_3_Black_St_1_Parkingleft)
+      (St_1_Boxpid -> dir_St_3_Black_St_1_Boxpid)
+      (St_1_Boxturnright -> dir_St_3_Black_St_1_Boxturnright)
+      (St_1_Boxturnleft -> dir_St_3_Black_St_1_Boxturnleft)
+      (St_1_Box -> dir_St_3_Black_St_1_Box)
+      (St_1_Stop -> dir_St_3_Black_St_1_Stop)
+      (St_1_Turnright -> dir_St_3_Black_St_1_Turnright)
+      (St_1_Turnleft -> dir_St_3_Black_St_1_Turnleft)
+      (St_1_Pid -> dir_St_3_Black_St_1_Pid)
+      (St_1_Idle -> dir_St_3_Black_St_1_Idle);
+  count =
+    merge ck_5
+      (St_1_Parked -> count_St_1_Parked)
+      (St_1_Backleft -> count_St_1_Backleft)
+      (St_1_Backright -> count_St_1_Backright)
+      (St_1_Parkingrestart -> count_St_1_Parkingrestart)
+      (St_1_Parkright -> count_St_1_Parkright)
+      (St_1_Parkleft -> count_St_1_Parkleft)
+      (St_1_Parkingcheck -> count_St_1_Parkingcheck)
+      (St_1_Parkingstart -> count_St_1_Parkingstart)
+      (St_1_Parkingpid -> count_St_1_Parkingpid)
+      (St_1_Parkingright -> count_St_1_Parkingright)
+      (St_1_Parkingleft -> count_St_1_Parkingleft)
+      (St_1_Boxpid -> count_St_1_Boxpid)
+      (St_1_Boxturnright -> count_St_1_Boxturnright)
+      (St_1_Boxturnleft -> count_St_1_Boxturnleft)
+      (St_1_Box -> count_St_1_Box)(St_1_Stop -> count_St_1_Stop)
+      (St_1_Turnright -> count_St_1_Turnright)
+      (St_1_Turnleft -> count_St_1_Turnleft)(St_1_Pid -> count_St_1_Pid)
+      (St_1_Idle -> count_St_1_Idle);
+  bound_left =
+    merge ck_5
+      (St_1_Parked -> bound_left_St_1_Parked)
+      (St_1_Backleft -> bound_left_St_1_Backleft)
+      (St_1_Backright -> bound_left_St_1_Backright)
+      (St_1_Parkingrestart -> bound_left_St_1_Parkingrestart)
+      (St_1_Parkright -> bound_left_St_1_Parkright)
+      (St_1_Parkleft -> bound_left_St_1_Parkleft)
+      (St_1_Parkingcheck -> bound_left_St_1_Parkingcheck)
+      (St_1_Parkingstart -> bound_left_St_1_Parkingstart)
+      (St_1_Parkingpid -> bound_left_St_1_Parkingpid)
+      (St_1_Parkingright -> bound_left_St_1_Parkingright)
+      (St_1_Parkingleft -> bound_left_St_1_Parkingleft)
+      (St_1_Boxpid -> bound_left_St_1_Boxpid)
+      (St_1_Boxturnright -> bound_left_St_1_Boxturnright)
+      (St_1_Boxturnleft -> bound_left_St_1_Boxturnleft)
+      (St_1_Box -> bound_left_St_1_Box)(St_1_Stop -> bound_left_St_1_Stop)
+      (St_1_Turnright -> bound_left_St_1_Turnright)
+      (St_1_Turnleft -> bound_left_St_1_Turnleft)
+      (St_1_Pid -> bound_left_St_1_Pid)(St_1_Idle -> bound_left_St_1_Idle);
+  bound_right =
+    merge ck_5
+      (St_1_Parked -> bound_right_St_1_Parked)
+      (St_1_Backleft -> bound_right_St_1_Backleft)
+      (St_1_Backright -> bound_right_St_1_Backright)
+      (St_1_Parkingrestart -> bound_right_St_1_Parkingrestart)
+      (St_1_Parkright -> bound_right_St_1_Parkright)
+      (St_1_Parkleft -> bound_right_St_1_Parkleft)
+      (St_1_Parkingcheck -> bound_right_St_1_Parkingcheck)
+      (St_1_Parkingstart -> bound_right_St_1_Parkingstart)
+      (St_1_Parkingpid -> bound_right_St_1_Parkingpid)
+      (St_1_Parkingright -> bound_right_St_1_Parkingright)
+      (St_1_Parkingleft -> bound_right_St_1_Parkingleft)
+      (St_1_Boxpid -> bound_right_St_1_Boxpid)
+      (St_1_Boxturnright -> bound_right_St_1_Boxturnright)
+      (St_1_Boxturnleft -> bound_right_St_1_Boxturnleft)
+      (St_1_Box -> bound_right_St_1_Box)(St_1_Stop -> bound_right_St_1_Stop)
+      (St_1_Turnright -> bound_right_St_1_Turnright)
+      (St_1_Turnleft -> bound_right_St_1_Turnleft)
+      (St_1_Pid -> bound_right_St_1_Pid)(St_1_Idle -> bound_right_St_1_Idle);
+  ns_1 =
+    merge ck_5
+      (St_1_Parked -> ns_1_St_1_Parked)(St_1_Backleft -> ns_1_St_1_Backleft)
+      (St_1_Backright -> ns_1_St_1_Backright)
+      (St_1_Parkingrestart -> ns_1_St_1_Parkingrestart)
+      (St_1_Parkright -> ns_1_St_1_Parkright)
+      (St_1_Parkleft -> ns_1_St_1_Parkleft)
+      (St_1_Parkingcheck -> ns_1_St_1_Parkingcheck)
+      (St_1_Parkingstart -> ns_1_St_1_Parkingstart)
+      (St_1_Parkingpid -> ns_1_St_1_Parkingpid)
+      (St_1_Parkingright -> ns_1_St_1_Parkingright)
+      (St_1_Parkingleft -> ns_1_St_1_Parkingleft)
+      (St_1_Boxpid -> ns_1_St_1_Boxpid)
+      (St_1_Boxturnright -> ns_1_St_1_Boxturnright)
+      (St_1_Boxturnleft -> ns_1_St_1_Boxturnleft)(St_1_Box -> ns_1_St_1_Box)
+      (St_1_Stop -> ns_1_St_1_Stop)(St_1_Turnright -> ns_1_St_1_Turnright)
+      (St_1_Turnleft -> ns_1_St_1_Turnleft)(St_1_Pid -> ns_1_St_1_Pid)
+      (St_1_Idle -> ns_1_St_1_Idle);
+  nr_1 =
+    merge ck_5
+      (St_1_Parked -> nr_1_St_1_Parked)(St_1_Backleft -> nr_1_St_1_Backleft)
+      (St_1_Backright -> nr_1_St_1_Backright)
+      (St_1_Parkingrestart -> nr_1_St_1_Parkingrestart)
+      (St_1_Parkright -> nr_1_St_1_Parkright)
+      (St_1_Parkleft -> nr_1_St_1_Parkleft)
+      (St_1_Parkingcheck -> nr_1_St_1_Parkingcheck)
+      (St_1_Parkingstart -> nr_1_St_1_Parkingstart)
+      (St_1_Parkingpid -> nr_1_St_1_Parkingpid)
+      (St_1_Parkingright -> nr_1_St_1_Parkingright)
+      (St_1_Parkingleft -> nr_1_St_1_Parkingleft)
+      (St_1_Boxpid -> nr_1_St_1_Boxpid)
+      (St_1_Boxturnright -> nr_1_St_1_Boxturnright)
+      (St_1_Boxturnleft -> nr_1_St_1_Boxturnleft)(St_1_Box -> nr_1_St_1_Box)
+      (St_1_Stop -> nr_1_St_1_Stop)(St_1_Turnright -> nr_1_St_1_Turnright)
+      (St_1_Turnleft -> nr_1_St_1_Turnleft)(St_1_Pid -> nr_1_St_1_Pid)
+      (St_1_Idle -> nr_1_St_1_Idle);
+  ck_4 = if (r_3 when St_3_Black(ck_1)) then St_1_Idle else v_189;
+  v_189 = St_1_Idle fby ns_1;
+  r_1_St_1_Idle = if v_173 then true else v_188;
+  s_1_St_1_Idle = if v_173 then St_1_Box else v_187;
+  v_188 = if v_178 then true else v_186;
+  v_187 = if v_178 then St_1_Pid else v_185;
+  v_186 = if v_180 then true else v_184;
+  v_185 = if v_180 then St_1_Turnleft else v_183;
+  v_184 = if v_182 then true else (pnr_1 when St_1_Idle(ck_4));
+  v_183 = if v_182 then St_1_Turnright else St_1_Idle;
+  v_182 = (v_181 < 500);
+  v_181 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[4];
+  v_180 = (v_179 < 500);
+  v_179 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[0];
+  v_178 = (v_175 or v_177);
+  v_177 = (v_176 < 500);
+  v_176 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[3];
+  v_175 = (v_174 < 500);
+  v_174 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[1];
+  v_173 = (v_170 & v_172);
+  v_172 = (v_171 < 600);
+  v_171 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[4];
+  v_170 = (v_167 & v_169);
+  v_169 = (v_168 < 600);
+  v_168 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[3];
+  v_167 = (v_164 & v_166);
+  v_166 = (v_165 < 600);
+  v_165 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[2];
+  v_164 = (v_163 < 600);
+  v_163 = ((sen when St_3_Black(ck_1)) when St_1_Idle(ck_4))[1];
+  r_1_St_1_Pid = if v_154 then true else v_162;
+  s_1_St_1_Pid = if v_154 then St_1_Box else v_161;
+  v_162 = if v_156 then true else v_160;
+  v_161 = if v_156 then St_1_Turnleft else v_159;
+  v_160 = if v_158 then true else (pnr_1 when St_1_Pid(ck_4));
+  v_159 = if v_158 then St_1_Turnright else St_1_Pid;
+  v_158 = (v_157 < 500);
+  v_157 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[4];
+  v_156 = (v_155 < 500);
+  v_155 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[0];
+  v_154 = (v_151 & v_153);
+  v_153 = (v_152 < 600);
+  v_152 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[4];
+  v_151 = (v_148 & v_150);
+  v_150 = (v_149 < 600);
+  v_149 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[3];
+  v_148 = (v_145 & v_147);
+  v_147 = (v_146 < 600);
+  v_146 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[2];
+  v_145 = (v_144 < 600);
+  v_144 = ((sen when St_3_Black(ck_1)) when St_1_Pid(ck_4))[1];
+  r_1_St_1_Turnleft = if v_139 then true else v_143;
+  s_1_St_1_Turnleft = if v_139 then St_1_Pid else v_142;
+  v_143 = if v_141 then true else (pnr_1 when St_1_Turnleft(ck_4));
+  v_142 = if v_141 then St_1_Turnright else St_1_Turnleft;
+  v_141 = (v_140 < 500);
+  v_140 = ((sen when St_3_Black(ck_1)) when St_1_Turnleft(ck_4))[4];
+  v_139 = (v_136 or v_138);
+  v_138 = (v_137 < 500);
+  v_137 = ((sen when St_3_Black(ck_1)) when St_1_Turnleft(ck_4))[3];
+  v_136 = (v_135 < 500);
+  v_135 = ((sen when St_3_Black(ck_1)) when St_1_Turnleft(ck_4))[1];
+  r_1_St_1_Turnright = if v_130 then true else v_134;
+  s_1_St_1_Turnright = if v_130 then St_1_Pid else v_133;
+  v_134 = if v_132 then true else (pnr_1 when St_1_Turnright(ck_4));
+  v_133 = if v_132 then St_1_Turnleft else St_1_Turnright;
+  v_132 = (v_131 < 500);
+  v_131 = ((sen when St_3_Black(ck_1)) when St_1_Turnright(ck_4))[0];
+  v_130 = (v_127 or v_129);
+  v_129 = (v_128 < 500);
+  v_128 = ((sen when St_3_Black(ck_1)) when St_1_Turnright(ck_4))[3];
+  v_127 = (v_126 < 500);
+  v_126 = ((sen when St_3_Black(ck_1)) when St_1_Turnright(ck_4))[1];
+  r_1_St_1_Stop = (pnr_1 when St_1_Stop(ck_4));
+  s_1_St_1_Stop = St_1_Stop;
+  r_1_St_1_Box = (pnr_1 when St_1_Box(ck_4));
+  s_1_St_1_Box = St_1_Box;
+  r_1_St_1_Boxturnleft = (pnr_1 when St_1_Boxturnleft(ck_4));
+  s_1_St_1_Boxturnleft = St_1_Boxturnleft;
+  r_1_St_1_Boxturnright = (pnr_1 when St_1_Boxturnright(ck_4));
+  s_1_St_1_Boxturnright = St_1_Boxturnright;
+  r_1_St_1_Boxpid = if v_125 then true else (pnr_1 when St_1_Boxpid(ck_4));
+  s_1_St_1_Boxpid = if v_125 then St_1_Pid else St_1_Boxpid;
+  v_125 = (v_122 & v_124);
+  v_124 = (v_123 < 600);
+  v_123 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_4))[2];
+  v_122 = (v_119 & v_121);
+  v_121 = (v_120 > 600);
+  v_120 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_4))[4];
+  v_119 = (v_118 > 600);
+  v_118 = ((sen when St_3_Black(ck_1)) when St_1_Boxpid(ck_4))[0];
+  r_1_St_1_Parkingleft =
+    if v_117 then true else (pnr_1 when St_1_Parkingleft(ck_4));
+  s_1_St_1_Parkingleft = if v_117 then St_1_Parkingpid else St_1_Parkingleft;
+  v_117 = not(v_116);
+  v_116 = (v_110 & v_115);
+  v_115 = (v_112 or v_114);
+  v_114 = (v_113 < 600);
+  v_113 = ((sen when St_3_Black(ck_1)) when St_1_Parkingleft(ck_4))[4];
+  v_112 = (v_111 < 600);
+  v_111 = ((sen when St_3_Black(ck_1)) when St_1_Parkingleft(ck_4))[0];
+  v_110 = (v_107 & v_109);
+  v_109 = (v_108 < 600);
+  v_108 = ((sen when St_3_Black(ck_1)) when St_1_Parkingleft(ck_4))[3];
+  v_107 = (v_104 & v_106);
+  v_106 = (v_105 < 600);
+  v_105 = ((sen when St_3_Black(ck_1)) when St_1_Parkingleft(ck_4))[2];
+  v_104 = (v_103 < 600);
+  v_103 = ((sen when St_3_Black(ck_1)) when St_1_Parkingleft(ck_4))[1];
+  r_1_St_1_Parkingright =
+    if v_102 then true else (pnr_1 when St_1_Parkingright(ck_4));
+  s_1_St_1_Parkingright =
+    if v_102 then St_1_Parkingpid else St_1_Parkingright;
+  v_102 = not(v_101);
+  v_101 = (v_95 & v_100);
+  v_100 = (v_97 or v_99);
+  v_99 = (v_98 < 600);
+  v_98 = ((sen when St_3_Black(ck_1)) when St_1_Parkingright(ck_4))[4];
+  v_97 = (v_96 < 600);
+  v_96 = ((sen when St_3_Black(ck_1)) when St_1_Parkingright(ck_4))[0];
+  v_95 = (v_92 & v_94);
+  v_94 = (v_93 < 600);
+  v_93 = ((sen when St_3_Black(ck_1)) when St_1_Parkingright(ck_4))[3];
+  v_92 = (v_89 & v_91);
+  v_91 = (v_90 < 600);
+  v_90 = ((sen when St_3_Black(ck_1)) when St_1_Parkingright(ck_4))[2];
+  v_89 = (v_88 < 600);
+  v_88 = ((sen when St_3_Black(ck_1)) when St_1_Parkingright(ck_4))[1];
+  r_1_St_1_Parkingpid =
+    if v_87 then true else (pnr_1 when St_1_Parkingpid(ck_4));
+  s_1_St_1_Parkingpid = if v_87 then St_1_Stop else St_1_Parkingpid;
+  v_87 = (v_84 & v_86);
+  v_86 = (v_85 < 600);
+  v_85 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_4))[3];
+  v_84 = (v_81 & v_83);
+  v_83 = (v_82 < 600);
+  v_82 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_4))[2];
+  v_81 = (v_80 < 600);
+  v_80 = ((sen when St_3_Black(ck_1)) when St_1_Parkingpid(ck_4))[1];
+  r_1_St_1_Parkingstart = (pnr_1 when St_1_Parkingstart(ck_4));
+  s_1_St_1_Parkingstart = St_1_Parkingstart;
+  r_1_St_1_Parkingcheck = (pnr_1 when St_1_Parkingcheck(ck_4));
+  s_1_St_1_Parkingcheck = St_1_Parkingcheck;
+  r_1_St_1_Parkleft = (pnr_1 when St_1_Parkleft(ck_4));
+  s_1_St_1_Parkleft = St_1_Parkleft;
+  r_1_St_1_Parkright = (pnr_1 when St_1_Parkright(ck_4));
+  s_1_St_1_Parkright = St_1_Parkright;
+  r_1_St_1_Parkingrestart = (pnr_1 when St_1_Parkingrestart(ck_4));
+  s_1_St_1_Parkingrestart = St_1_Parkingrestart;
+  r_1_St_1_Backright = (pnr_1 when St_1_Backright(ck_4));
+  s_1_St_1_Backright = St_1_Backright;
+  r_1_St_1_Backleft = (pnr_1 when St_1_Backleft(ck_4));
+  s_1_St_1_Backleft = St_1_Backleft;
+  r_1_St_1_Parked = (pnr_1 when St_1_Parked(ck_4));
+  s_1_St_1_Parked = St_1_Parked;
+  s_1 =
+    merge ck_4
+      (St_1_Parked -> s_1_St_1_Parked)(St_1_Backleft -> s_1_St_1_Backleft)
+      (St_1_Backright -> s_1_St_1_Backright)
+      (St_1_Parkingrestart -> s_1_St_1_Parkingrestart)
+      (St_1_Parkright -> s_1_St_1_Parkright)
+      (St_1_Parkleft -> s_1_St_1_Parkleft)
+      (St_1_Parkingcheck -> s_1_St_1_Parkingcheck)
+      (St_1_Parkingstart -> s_1_St_1_Parkingstart)
+      (St_1_Parkingpid -> s_1_St_1_Parkingpid)
+      (St_1_Parkingright -> s_1_St_1_Parkingright)
+      (St_1_Parkingleft -> s_1_St_1_Parkingleft)
+      (St_1_Boxpid -> s_1_St_1_Boxpid)
+      (St_1_Boxturnright -> s_1_St_1_Boxturnright)
+      (St_1_Boxturnleft -> s_1_St_1_Boxturnleft)(St_1_Box -> s_1_St_1_Box)
+      (St_1_Stop -> s_1_St_1_Stop)(St_1_Turnright -> s_1_St_1_Turnright)
+      (St_1_Turnleft -> s_1_St_1_Turnleft)(St_1_Pid -> s_1_St_1_Pid)
+      (St_1_Idle -> s_1_St_1_Idle);
+  r_1 =
+    merge ck_4
+      (St_1_Parked -> r_1_St_1_Parked)(St_1_Backleft -> r_1_St_1_Backleft)
+      (St_1_Backright -> r_1_St_1_Backright)
+      (St_1_Parkingrestart -> r_1_St_1_Parkingrestart)
+      (St_1_Parkright -> r_1_St_1_Parkright)
+      (St_1_Parkleft -> r_1_St_1_Parkleft)
+      (St_1_Parkingcheck -> r_1_St_1_Parkingcheck)
+      (St_1_Parkingstart -> r_1_St_1_Parkingstart)
+      (St_1_Parkingpid -> r_1_St_1_Parkingpid)
+      (St_1_Parkingright -> r_1_St_1_Parkingright)
+      (St_1_Parkingleft -> r_1_St_1_Parkingleft)
+      (St_1_Boxpid -> r_1_St_1_Boxpid)
+      (St_1_Boxturnright -> r_1_St_1_Boxturnright)
+      (St_1_Boxturnleft -> r_1_St_1_Boxturnleft)(St_1_Box -> r_1_St_1_Box)
+      (St_1_Stop -> r_1_St_1_Stop)(St_1_Turnright -> r_1_St_1_Turnright)
+      (St_1_Turnleft -> r_1_St_1_Turnleft)(St_1_Pid -> r_1_St_1_Pid)
+      (St_1_Idle -> r_1_St_1_Idle);
+  sen_St_3_Black =
+    [(sen0 when St_3_Black(ck_1)); (sen1 when St_3_Black(ck_1));
+      (sen2 when St_3_Black(ck_1)); (sen3 when St_3_Black(ck_1));
+      (sen4 when St_3_Black(ck_1))];
+  nr_3_St_3_Black = false;
+  ns_3_St_3_Black = St_3_Black;
+  inputvalue_St_3_Joystick = (inputvalue_1 when St_3_Joystick(ck_1));
+  pnr_2 = if (r_3 when St_3_Joystick(ck_1)) then false else v_79;
+  v_79 = false fby nr_2;
+  ck_7 = s_2;
+  dir_St_3_Joystick_St_2_Idle = 0;
+  v_r_St_3_Joystick_St_2_Idle = 0;
+  v_l_St_3_Joystick_St_2_Idle = 0;
+  nr_2_St_2_Idle = false;
+  ns_2_St_2_Idle = St_2_Idle;
+  dir_St_3_Joystick_St_2_Left = 3;
+  v_r_St_3_Joystick_St_2_Left = 30;
+  v_l_St_3_Joystick_St_2_Left = 30;
+  nr_2_St_2_Left = false;
+  ns_2_St_2_Left = St_2_Left;
+  dir_St_3_Joystick_St_2_Right = 4;
+  v_r_St_3_Joystick_St_2_Right = 30;
+  v_l_St_3_Joystick_St_2_Right = 30;
+  nr_2_St_2_Right = false;
+  ns_2_St_2_Right = St_2_Right;
+  dir_St_3_Joystick_St_2_Forward = 1;
+  v_r_St_3_Joystick_St_2_Forward = 30;
+  v_l_St_3_Joystick_St_2_Forward = 30;
+  nr_2_St_2_Forward = false;
+  ns_2_St_2_Forward = St_2_Forward;
+  dir_St_3_Joystick_St_2_Backward = 4;
+  v_r_St_3_Joystick_St_2_Backward = 30;
+  v_l_St_3_Joystick_St_2_Backward = 30;
+  nr_2_St_2_Backward = false;
+  ns_2_St_2_Backward = St_2_Backward;
+  v_l_St_3_Joystick =
+    merge ck_7
+      (St_2_Backward -> v_l_St_3_Joystick_St_2_Backward)
+      (St_2_Forward -> v_l_St_3_Joystick_St_2_Forward)
+      (St_2_Right -> v_l_St_3_Joystick_St_2_Right)
+      (St_2_Left -> v_l_St_3_Joystick_St_2_Left)
+      (St_2_Idle -> v_l_St_3_Joystick_St_2_Idle);
+  v_r_St_3_Joystick =
+    merge ck_7
+      (St_2_Backward -> v_r_St_3_Joystick_St_2_Backward)
+      (St_2_Forward -> v_r_St_3_Joystick_St_2_Forward)
+      (St_2_Right -> v_r_St_3_Joystick_St_2_Right)
+      (St_2_Left -> v_r_St_3_Joystick_St_2_Left)
+      (St_2_Idle -> v_r_St_3_Joystick_St_2_Idle);
+  dir_St_3_Joystick =
+    merge ck_7
+      (St_2_Backward -> dir_St_3_Joystick_St_2_Backward)
+      (St_2_Forward -> dir_St_3_Joystick_St_2_Forward)
+      (St_2_Right -> dir_St_3_Joystick_St_2_Right)
+      (St_2_Left -> dir_St_3_Joystick_St_2_Left)
+      (St_2_Idle -> dir_St_3_Joystick_St_2_Idle);
+  ns_2 =
+    merge ck_7
+      (St_2_Backward -> ns_2_St_2_Backward)
+      (St_2_Forward -> ns_2_St_2_Forward)(St_2_Right -> ns_2_St_2_Right)
+      (St_2_Left -> ns_2_St_2_Left)(St_2_Idle -> ns_2_St_2_Idle);
+  nr_2 =
+    merge ck_7
+      (St_2_Backward -> nr_2_St_2_Backward)
+      (St_2_Forward -> nr_2_St_2_Forward)(St_2_Right -> nr_2_St_2_Right)
+      (St_2_Left -> nr_2_St_2_Left)(St_2_Idle -> nr_2_St_2_Idle);
+  ck_6 = if (r_3 when St_3_Joystick(ck_1)) then St_2_Idle else v_78;
+  v_78 = St_2_Idle fby ns_2;
+  r_2_St_2_Idle = if v_68 then true else v_77;
+  s_2_St_2_Idle = if v_68 then St_2_Forward else v_76;
+  v_77 = if v_69 then true else v_75;
+  v_76 = if v_69 then St_2_Backward else v_74;
+  v_75 = if v_70 then true else v_73;
+  v_74 = if v_70 then St_2_Left else v_72;
+  v_73 = if v_71 then true else (pnr_2 when St_2_Idle(ck_6));
+  v_72 = if v_71 then St_2_Right else St_2_Idle;
+  v_71 = (((j_input when St_3_Joystick(ck_1)) when St_2_Idle(ck_6)) = 5);
+  v_70 = (((j_input when St_3_Joystick(ck_1)) when St_2_Idle(ck_6)) = 4);
+  v_69 = (((j_input when St_3_Joystick(ck_1)) when St_2_Idle(ck_6)) = 3);
+  v_68 = (((j_input when St_3_Joystick(ck_1)) when St_2_Idle(ck_6)) = 2);
+  r_2_St_2_Left = if v_58 then true else v_67;
+  s_2_St_2_Left = if v_58 then St_2_Forward else v_66;
+  v_67 = if v_59 then true else v_65;
+  v_66 = if v_59 then St_2_Backward else v_64;
+  v_65 = if v_60 then true else v_63;
+  v_64 = if v_60 then St_2_Idle else v_62;
+  v_63 = if v_61 then true else (pnr_2 when St_2_Left(ck_6));
+  v_62 = if v_61 then St_2_Right else St_2_Left;
+  v_61 = (((j_input when St_3_Joystick(ck_1)) when St_2_Left(ck_6)) = 5);
+  v_60 = (((j_input when St_3_Joystick(ck_1)) when St_2_Left(ck_6)) = 0);
+  v_59 = (((j_input when St_3_Joystick(ck_1)) when St_2_Left(ck_6)) = 3);
+  v_58 = (((j_input when St_3_Joystick(ck_1)) when St_2_Left(ck_6)) = 2);
+  r_2_St_2_Right = if v_48 then true else v_57;
+  s_2_St_2_Right = if v_48 then St_2_Forward else v_56;
+  v_57 = if v_49 then true else v_55;
+  v_56 = if v_49 then St_2_Backward else v_54;
+  v_55 = if v_50 then true else v_53;
+  v_54 = if v_50 then St_2_Idle else v_52;
+  v_53 = if v_51 then true else (pnr_2 when St_2_Right(ck_6));
+  v_52 = if v_51 then St_2_Left else St_2_Right;
+  v_51 = (((j_input when St_3_Joystick(ck_1)) when St_2_Right(ck_6)) = 4);
+  v_50 = (((j_input when St_3_Joystick(ck_1)) when St_2_Right(ck_6)) = 0);
+  v_49 = (((j_input when St_3_Joystick(ck_1)) when St_2_Right(ck_6)) = 3);
+  v_48 = (((j_input when St_3_Joystick(ck_1)) when St_2_Right(ck_6)) = 2);
+  r_2_St_2_Forward = if v_38 then true else v_47;
+  s_2_St_2_Forward = if v_38 then St_2_Left else v_46;
+  v_47 = if v_39 then true else v_45;
+  v_46 = if v_39 then St_2_Backward else v_44;
+  v_45 = if v_40 then true else v_43;
+  v_44 = if v_40 then St_2_Idle else v_42;
+  v_43 = if v_41 then true else (pnr_2 when St_2_Forward(ck_6));
+  v_42 = if v_41 then St_2_Right else St_2_Forward;
+  v_41 = (((j_input when St_3_Joystick(ck_1)) when St_2_Forward(ck_6)) = 5);
+  v_40 = (((j_input when St_3_Joystick(ck_1)) when St_2_Forward(ck_6)) = 0);
+  v_39 = (((j_input when St_3_Joystick(ck_1)) when St_2_Forward(ck_6)) = 3);
+  v_38 = (((j_input when St_3_Joystick(ck_1)) when St_2_Forward(ck_6)) = 4);
+  r_2_St_2_Backward = if v_28 then true else v_37;
+  s_2_St_2_Backward = if v_28 then St_2_Forward else v_36;
+  v_37 = if v_29 then true else v_35;
+  v_36 = if v_29 then St_2_Left else v_34;
+  v_35 = if v_30 then true else v_33;
+  v_34 = if v_30 then St_2_Idle else v_32;
+  v_33 = if v_31 then true else (pnr_2 when St_2_Backward(ck_6));
+  v_32 = if v_31 then St_2_Right else St_2_Backward;
+  v_31 = (((j_input when St_3_Joystick(ck_1)) when St_2_Backward(ck_6)) = 5);
+  v_30 = (((j_input when St_3_Joystick(ck_1)) when St_2_Backward(ck_6)) = 0);
+  v_29 = (((j_input when St_3_Joystick(ck_1)) when St_2_Backward(ck_6)) = 4);
+  v_28 = (((j_input when St_3_Joystick(ck_1)) when St_2_Backward(ck_6)) = 2);
+  s_2 =
+    merge ck_6
+      (St_2_Backward -> s_2_St_2_Backward)(St_2_Forward -> s_2_St_2_Forward)
+      (St_2_Right -> s_2_St_2_Right)(St_2_Left -> s_2_St_2_Left)
+      (St_2_Idle -> s_2_St_2_Idle);
+  r_2 =
+    merge ck_6
+      (St_2_Backward -> r_2_St_2_Backward)(St_2_Forward -> r_2_St_2_Forward)
+      (St_2_Right -> r_2_St_2_Right)(St_2_Left -> r_2_St_2_Left)
+      (St_2_Idle -> r_2_St_2_Idle);
+  sen_St_3_Joystick =
+    [(sen0 when St_3_Joystick(ck_1)); (sen1 when St_3_Joystick(ck_1));
+      (sen2 when St_3_Joystick(ck_1)); (sen3 when St_3_Joystick(ck_1));
+      (sen4 when St_3_Joystick(ck_1))];
+  nr_3_St_3_Joystick = false;
+  ns_3_St_3_Joystick = St_3_Joystick;
+  v_l =
+    merge ck_1
+      (St_3_Joystick -> v_l_St_3_Joystick)(St_3_Black -> v_l_St_3_Black)
+      (St_3_White -> v_l_St_3_White)(St_3_Inputval -> v_l_St_3_Inputval);
+  v_r =
+    merge ck_1
+      (St_3_Joystick -> v_r_St_3_Joystick)(St_3_Black -> v_r_St_3_Black)
+      (St_3_White -> v_r_St_3_White)(St_3_Inputval -> v_r_St_3_Inputval);
+  dir =
+    merge ck_1
+      (St_3_Joystick -> dir_St_3_Joystick)(St_3_Black -> dir_St_3_Black)
+      (St_3_White -> dir_St_3_White)(St_3_Inputval -> dir_St_3_Inputval);
+  sen =
+    merge ck_1
+      (St_3_Joystick -> sen_St_3_Joystick)(St_3_Black -> sen_St_3_Black)
+      (St_3_White -> sen_St_3_White)(St_3_Inputval -> sen_St_3_Inputval);
+  inputvalue =
+    merge ck_1
+      (St_3_Joystick -> inputvalue_St_3_Joystick)
+      (St_3_Black -> inputvalue_St_3_Black)
+      (St_3_White -> inputvalue_St_3_White)
+      (St_3_Inputval -> inputvalue_St_3_Inputval);
+  ns_3 =
+    merge ck_1
+      (St_3_Joystick -> ns_3_St_3_Joystick)(St_3_Black -> ns_3_St_3_Black)
+      (St_3_White -> ns_3_St_3_White)(St_3_Inputval -> ns_3_St_3_Inputval);
+  nr_3 =
+    merge ck_1
+      (St_3_Joystick -> nr_3_St_3_Joystick)(St_3_Black -> nr_3_St_3_Black)
+      (St_3_White -> nr_3_St_3_White)(St_3_Inputval -> nr_3_St_3_Inputval);
+  ck = St_3_Inputval fby ns_3;
+  r_3_St_3_Inputval = if v_27 then true else (pnr_3 when St_3_Inputval(ck));
+  s_3_St_3_Inputval = if v_27 then St_3_White else St_3_Inputval;
+  v_27 = ((j_input when St_3_Inputval(ck)) = 6);
+  r_3_St_3_White = if v_16 then true else v_26;
+  s_3_St_3_White = if v_16 then St_3_Joystick else v_25;
+  v_26 = if v_17 then true else v_24;
+  v_25 = if v_17 then St_3_Inputval else v_23;
+  v_24 = if v_22 then true else (pnr_3 when St_3_White(ck));
+  v_23 = if v_22 then St_3_Black else St_3_White;
+  v_22 = (v_20 & v_21);
+  v_21 = ((sen2 when St_3_White(ck)) < 600);
+  v_20 = (v_18 & v_19);
+  v_19 = ((sen4 when St_3_White(ck)) > 600);
+  v_18 = ((sen0 when St_3_White(ck)) > 600);
+  v_17 = ((j_input when St_3_White(ck)) = 7);
+  v_16 = ((j_input when St_3_White(ck)) = 1);
+  r_3_St_3_Black = if v_15 then true else (pnr_3 when St_3_Black(ck));
+  s_3_St_3_Black = if v_15 then St_3_Joystick else St_3_Black;
+  v_15 = ((j_input when St_3_Black(ck)) = 1);
+  r_3_St_3_Joystick = if v then false else (pnr_3 when St_3_Joystick(ck));
+  s_3_St_3_Joystick = if v then St_3_White else St_3_Joystick;
+  v = ((j_input when St_3_Joystick(ck)) = 6);
+  s_3 =
+    merge ck
+      (St_3_Joystick -> s_3_St_3_Joystick)(St_3_Black -> s_3_St_3_Black)
+      (St_3_White -> s_3_St_3_White)(St_3_Inputval -> s_3_St_3_Inputval);
+  r_3 =
+    merge ck
+      (St_3_Joystick -> r_3_St_3_Joystick)(St_3_Black -> r_3_St_3_Black)
+      (St_3_White -> r_3_St_3_White)(St_3_Inputval -> r_3_St_3_Inputval);
+  inputgiven = inputvalue
+tel
+
